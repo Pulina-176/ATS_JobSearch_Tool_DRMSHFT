@@ -1,0 +1,70 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+test-results/
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints
+
+# Environment variables and config
+.env
+.env.*
+
+# IDE settings
+.vscode/
+.idea/
+*.swp
+
+# Web scraping logs or outputs
+scraped_data/
+scraping_logs/
+
+# Selenium driver files (if included manually)
+chromedriver
+geckodriver
+
+# macOS-specific files
+.DS_Store
+
+# Windows-specific files
+Thumbs.db
