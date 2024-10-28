@@ -16,8 +16,8 @@ linkedinAPI_url = "https://www.linkedin.com/jobs-guest/jobs/api/jobPosting/"
 driver = webdriver.Chrome()
 
 job_roles = [
-    # "Customer service representative" ,
-    "AML Analyst",
+    "Customer service representative" ,
+    # "AML Analyst",
     "Remittance clerk" ,
     "Credit analyst" ,
     "Compliance analyst",
@@ -70,8 +70,52 @@ for i in urls:
     print(i)
 
 
-# Open the LinkedIn jobs page
-#driver.get("https://www.linkedin.com/jobs/search/?currentJobId=4036934438&geoId=101165590&keywords=Compliance%20Corporate&origin=JOB_SEARCH_PAGE_LOCATION_AUTOCOMPLETE&refresh=true")
+# Function to check for presence of filter tab
+# This checks if we are on searcch page or not
+def check_element_presence(driver, css_selector):
+    """Check if a specific element is present on the page.
+    
+    Args:
+        driver: The WebDriver instance.
+        css_selector (str): The CSS selector of the element to locate.
+
+    Returns:
+        int: 1 if the element is present, 0 otherwise.
+    """
+    try:
+        # Attempt to find the element
+        driver.find_element(By.CSS_SELECTOR, css_selector)
+        return 1  # Element found
+    except NoSuchElementException:
+        return 0  # Element not found
+    
+def apply_date_filter():
+    """Apply the 'Past Month' filter under 'Date Posted'."""
+    try:
+        # Locate and click the 'Date Posted' filter button
+        date_filter_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//button[contains(@aria-label, 'Date posted filter')]"))
+        )
+        date_filter_button.click()
+        print("Opened 'Date Posted' filter dropdown.")
+
+        # Wait and select the 'Past Month' option in the dropdown
+        past_month_option = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//input[@id='f_TPR-1']/following-sibling::label"))
+        )
+        past_month_option.click()
+        print("Selected 'Past Month' option.")
+
+        # Locate and click the 'Done' button to apply the filter
+        done_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//button[@class='filter__submit-button' and @type='submit']"))
+        )
+        done_button.click()
+        print("Clicked 'Done' to apply the date filter.")
+
+    except Exception as e:
+        print(f"Error applying date filter: {e}")
+
 
 def close_any_modal():
     """Close any modal that might appear on the page."""
@@ -154,6 +198,7 @@ def scrape_jobs(target_count):
 
     try:
         close_any_modal()  # Close any modal popup that may block the content
+        apply_date_filter()  # Apply the 'Past Month' date filter
 
         while len(total_jobs) < target_count:
             scroll_down()  # Scroll down the page to load more jobs
@@ -169,14 +214,16 @@ def scrape_jobs(target_count):
 
             # Check if the "See more jobs" button appears and click it if available
             if not click_see_more_button():
-                # # If no "See more jobs" button is found, check for the "You've viewed all jobs" message
-                # if check_all_jobs_viewed():
-                #     print("All jobs have been loaded.")
-                #     break  # Exit the loop if all jobs are loaded
-                # else:
+                
                 print("No more jobs to load. Trying to scroll up and then down again...")
                 scroll_up()  # Scroll up a bit
                 scroll_down()  # Try to scroll down again
+
+                # If no "See more jobs" button is found, check for the "You've viewed all jobs" message
+                if check_all_jobs_viewed():
+                    print("All jobs have been loaded.")
+                    break  # Exit the loop if all jobs are loaded
+
                 continue  # Continue the loop
 
     except Exception as e:
@@ -207,11 +254,14 @@ def scrape_jobs(target_count):
 
 # Call the main scrape_jobs function to start the process
 for url in urls:
-    driver.get(url)
-    scrape_jobs(10)
+    result = 0
 
+    while result == 0:
+        driver.get(url)
+        time.sleep(5)
+        result = check_element_presence(driver, "body > div.base-serp-page > section.base-serp-page__filters-bar")
+        print("testing ", result)  # Will print 1 if the element is present, 0 otherwise
+        
+    scrape_jobs(20)
+    print("Scraping done for ", url)
 
-
-# company_url = "https://www.linkedin.com/company/safenax/"
-# job_response = requests.get(linkedinAPI_url)
-# print(job_response.text)
