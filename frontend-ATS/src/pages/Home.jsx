@@ -134,7 +134,6 @@ const NameInput = ({ label, entries, onAdd, onRemove }) => (
 
 
 const Home = () => {
-<<<<<<< Updated upstream
   const [names, setNames] = useState(
     JSON.parse(localStorage.getItem("names")) || []
   );
@@ -147,14 +146,6 @@ const Home = () => {
   const [fields, setFields] = useState(
     JSON.parse(localStorage.getItem("fields")) || []
   );
-=======
-  return (
-    <h1 className="text-3xl font-bold underline">
-      Hello ravindu
-    </h1>
-  )
-}
->>>>>>> Stashed changes
 
   const handleAddEntry = (type, setEntries, entries) => {
     const newEntry = prompt(`Enter a new ${type}:`);
