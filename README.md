@@ -9,7 +9,13 @@ Set Up a Virtual Environment:
 <python -m venv .venv>
 
 Activate the virtual environment:
-.venv\Scripts\activate>
+.venv\Scripts\activate
 
 Install Dependencies:
 <pip install -r requirements.txt>
+
+
+# Other guidelines
+
+Update requirements.txt before commits to track dependency changes
+pip freeze > requirements.txt
