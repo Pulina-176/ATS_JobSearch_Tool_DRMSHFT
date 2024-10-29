@@ -265,3 +265,10 @@ for url in urls:
     scrape_jobs(20)
     print("Scraping done for ", url)
 
+
+
+# seniority level
+# employment type
+# Industries
+# Job Functions
+# Description length
