@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import Header from "../UI-components/Header";
 import TextInput from "../UI-components/TextInput";
+import Modal from "../UI-components/Modal";
 
 // Styles for the body element
 document.body.style.backgroundColor = " #000000";
@@ -57,7 +58,7 @@ const Home = () => {
       </div>
 
       {/* Form Section */}
-      <div className="w-[100%] max-w-lg mx-auto">
+      <div className="w-[100%] max-w-lg mx-auto mb-[30px]">
         <form className="w-4/5 max-w-lg mx-auto text-left flex flex-col gap-6">     
     
 
@@ -80,7 +81,7 @@ const Home = () => {
           {/* Fields Input */}
           <TextInput
             label="Companies"
-            entries={fields}
+            entries={companies}
             onAdd={() => handleAddEntry("companies", setCompanies, companies)}
             onRemove={(index) => handleRemoveEntry("companies", setCompanies, companies, index)}
           />
@@ -93,7 +94,13 @@ const Home = () => {
             onRemove={(index) => handleRemoveEntry("fields", setFields, fields, index)}
           />
         </form>
+       
       </div>
+
+    <div className="w-4/5 max-w-lg mx-auto">
+      <button className="btn ml-0 sm:ml-12">Submit to Proceed</button>
+    </div>
+      
     </div>
   );
 };
