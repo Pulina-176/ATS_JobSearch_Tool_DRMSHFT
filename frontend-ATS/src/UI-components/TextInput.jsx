@@ -6,6 +6,8 @@ import AddCircleSharpIcon from "@mui/icons-material/AddCircleSharp";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 
+import Modal from "./Modal.jsx";
+
 const TextInput = ({ label, entries, onAdd, onRemove }) => (
   <div className="font-inter">
     <div className="text-md font-regular mb-[5px] text-white">
@@ -34,6 +36,8 @@ const TextInput = ({ label, entries, onAdd, onRemove }) => (
     >
       <AddCircleSharpIcon />
     </Button>
+
+    {/* <Modal/> */}
     </div>
   
   </div>
