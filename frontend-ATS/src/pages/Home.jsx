@@ -1,36 +1,10 @@
 import React, { useState, useEffect } from "react";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import AddCircleSharpIcon from "@mui/icons-material/AddCircleSharp";
-import IconButton from "@mui/material/IconButton";
-import DeleteIcon from "@mui/icons-material/Delete";
 
-// Styles for the main container
-const containerStyle = {
-  backgroundColor: "#411C30",
-  height: "100vh",
-  color: "white",
-  padding: "20px",
-  boxSizing: "border-box",
-  position: "relative",
-};
+import Header from "../UI-components/Header";
+import TextInput from "../UI-components/TextInput";
 
-// Styles for the logo image
-const logoStyle = {
-  position: "absolute",
-  top: "20px",
-  left: "20px",
-  width: "200px",
-  height: "auto",
-};
-
-// Styles for the form wrapper
-const formWrapperStyle = {
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  height: "100%",
-};
+// Styles for the body element
+document.body.style.backgroundColor = " #000000";
 
 // Styles for the form
 const formStyle = {
@@ -40,101 +14,11 @@ const formStyle = {
   textAlign: "left",
 };
 
-// TextInput component for reusable input fields
-const TextInput = ({ label, entries, onAdd, onRemove }) => (
-  <div style={{ marginBottom: "20px" }}>
-    <label style={{ display: "block", marginBottom: "5px", textAlign: "left" }}>
-      {label}
-    </label>
-    <div
-      style={{
-        backgroundColor: "white",
-        borderRadius: "5px",
-        padding: "10px",
-        height: "100px",
-        overflowY: "auto",
-        color: "black",
-      }}
-    >
-      {entries.map((entry, index) => (
-        <div key={index} style={{ display: "flex", alignItems: "center" }}>
-          <span style={{ flexGrow: 1 }}>{entry}</span>
-          <IconButton
-            size="small"
-            onClick={() => onRemove(index)}
-            style={{ color: "red" }}
-          >
-            <DeleteIcon fontSize="small" />
-          </IconButton>
-        </div>
-      ))}
-    </div>
 
-    <Button
-      variant="contained"
-      endIcon={<AddCircleSharpIcon />}
-      onClick={onAdd}
-      style={{ marginTop: "5px", backgroundColor: "#5A5A5A", color: "white" }}
-    >
-      Add
-    </Button>
-  </div>
-);
-
-const NameInput = ({ label, entries, onAdd, onRemove }) => (
-  <div style={{ marginBottom: "20px" }}>
-    <label style={{ display: "block", marginBottom: "5px", textAlign: "left" }}>
-      {label}
-    </label>
-    <div
-      style={{
-        backgroundColor: "white",
-        borderRadius: "5px",
-        padding: "10px",
-        height: "100px",
-        overflowY: "auto",
-        color: "black",
-      }}
-    >
-      {entries.map((entry, index) => (
-        <div key={index} style={{ display: "flex", alignItems: "center" }}>
-          <span style={{ flexGrow: 1 }}>{entry}</span>
-          <IconButton
-            size="small"
-            onClick={() => onRemove(index)}
-            style={{ color: "red" }}
-          >
-            <DeleteIcon fontSize="small" />
-          </IconButton>
-        </div>
-      ))}
-    </div>
-    {entries.length === 0 && (
-     <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
-     <Button
-       variant="contained"
-       endIcon={<AddCircleSharpIcon />}
-       onClick={onAdd}
-       style={{ backgroundColor: "#5A5A5A", color: "white" }}
-     >
-       Add
-     </Button>
-     <Button
-       variant="outlined"
-       style={{ color: "white", borderColor: "white" }}
-       onClick={() => {/* Define your function here */}}
-     >
-       Submit
-     </Button>
-   </div>
-      
-    )}
-  </div>
-);
-
+// Main Home Page component
 
 const Home = () => {
-  const [names, setNames] = useState(
+  const [companies, setCompanies] = useState(
     JSON.parse(localStorage.getItem("names")) || []
   );
   const [jobRoles, setJobRoles] = useState(
@@ -163,29 +47,18 @@ const Home = () => {
   };
 
   return (
-    <div style={containerStyle}>
-      {/* Logo */}
-      <img src="/logo.png" alt="Logo" style={logoStyle} />
+    <div className="flex flex-col pb-10">
+      <Header/>
+
+      <div className="p-10 self-center">
+        <h1 className="text-white font-bold text-left text-[36px]">Welcome to the DreamShift Job Search Tool</h1>
+        <h1 className="text-white font-semibold text-left text-lg">Provide the required details to perform the job search</h1>
+
+      </div>
 
       {/* Form Section */}
-      <div style={formWrapperStyle}>
-        <form style={formStyle}>
-          {/* Name Input */}
-          <NameInput
-            label="Name"
-            entries={names}
-            onAdd={() => handleAddEntry("names", setNames, names)}
-            onRemove={(index) => handleRemoveEntry("names", setNames, names, index)}
-          />
-
-      {/* <label>
-        Enter Text:
-        <input className="text-black"
-          type="text" 
-          placeholder="Type something..." 
-        />
-      </label> */}
-      
+      <div className="w-[100%] max-w-lg mx-auto">
+        <form className="w-4/5 max-w-lg mx-auto text-left flex flex-col gap-6">     
     
 
           {/* Job Roles Input */}
@@ -202,6 +75,14 @@ const Home = () => {
             entries={locations}
             onAdd={() => handleAddEntry("locations", setLocations, locations)}
             onRemove={(index) => handleRemoveEntry("locations", setLocations, locations, index)}
+          />
+
+          {/* Fields Input */}
+          <TextInput
+            label="Companies"
+            entries={fields}
+            onAdd={() => handleAddEntry("companies", setCompanies, companies)}
+            onRemove={(index) => handleRemoveEntry("companies", setCompanies, companies, index)}
           />
 
           {/* Fields Input */}
