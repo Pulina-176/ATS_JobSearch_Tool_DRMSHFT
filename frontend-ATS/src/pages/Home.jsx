@@ -47,6 +47,57 @@ const Home = () => {
     localStorage.setItem(type, JSON.stringify(updatedEntries));
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    if (!Array.isArray(jobRoles) || !Array.isArray(locations)) {
+      console.error('Invalid input data');
+      return;
+    }
+  
+    const mergedData = {
+      jobRoles: jobRoles,
+      locations: locations,
+    };
+  
+    console.log("Sending data:", mergedData);  
+  
+    try {
+      const response = await fetch("http://127.0.0.1:8000/scrape_jobs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(mergedData),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to submit data');
+      }
+  
+      const data = await response.json();
+      console.log("Success:", data);
+    } catch (error) {
+      console.error("Error in handleSubmit:", error);
+    }
+
+
+try{
+    const getResponse = await fetch("http://127.0.0.1:8000/scrape_and_get_details");
+
+    if (!getResponse.ok) {
+      throw new Error("Failed to fetch scraping details");
+    }
+
+    const getData = await getResponse.json();
+    console.log("GET Success:", getData);
+
+    // Optionally handle `getData` for UI updates
+  } catch (error) {
+    console.error("Error in handleSubmit:", error);
+  }
+  };
+
   return (
     <div className="flex flex-col pb-10">
       <Header/>
@@ -98,7 +149,7 @@ const Home = () => {
       </div>
 
     <div className="w-4/5 max-w-lg mx-auto">
-      <button className="btn ml-0 sm:ml-12">Submit to Proceed</button>
+      <button className="btn ml-0 sm:ml-12" onClick={handleSubmit}>Submit to Proceed</button>
     </div>
       
     </div>
