@@ -31,13 +31,13 @@ const TextInput = ({ label, entries, onAdd, onRemove }) => (
       ))}
     </div>
 
+    {/* Modal trigger Button */}
     <Button
       onClick={onAdd}
     >
       <AddCircleSharpIcon />
     </Button>
 
-    {/* <Modal/> */}
     </div>
   
   </div>

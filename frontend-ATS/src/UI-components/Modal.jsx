@@ -1,7 +1,8 @@
 import React from 'react'
+import ReactDOM from "react-dom";
 
 const Modal = () => {
-  return (
+  return ReactDOM.createPortal(
     <div>
         {/* You can open the modal using document.getElementById('ID').showModal() method */}
         <button className="btn" onClick={()=>document.getElementById('my_modal_3').showModal()}>open modal</button>
@@ -15,7 +16,8 @@ const Modal = () => {
             <p className="py-4">Press ESC key or click on ✕ button to close</p>
         </div>
         </dialog>
-    </div>
+    </div>,
+    document.getElementById("modal-root") // Ensure this div is mounted to index.html
   )
 }
 
