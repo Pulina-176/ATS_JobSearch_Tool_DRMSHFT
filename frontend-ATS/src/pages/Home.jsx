@@ -6,6 +6,7 @@ import { addJobRole , removeJobRole , addCompany , removeCompany ,
 import Header from "../UI-components/Header";
 import TextInput from "../UI-components/TextInput";
 import Modal from "../UI-components/Modal";
+import Processing from "../UI-components/Processing";
 
 // Styles for the body element
 document.body.style.backgroundColor = " #000000";
@@ -55,13 +56,10 @@ const Home = () => {
     setModalState({ ...modalState, isVisible: false });
   };
 
-  const handleRemoveEntry = (type, setEntries, entries, index) => {
-    const updatedEntries = entries.filter((_, i) => i !== index);
-    setEntries(updatedEntries);
-    localStorage.setItem(type, JSON.stringify(updatedEntries));
-  };
 
+  // Webscraper begin
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
   
     if (!Array.isArray(jobRoles) || !Array.isArray(locations)) {
@@ -113,6 +111,7 @@ const Home = () => {
   };
 
   return (
+    loading ? <Processing /> :
     <div className="flex flex-col pb-10">
       <Header/>
 
