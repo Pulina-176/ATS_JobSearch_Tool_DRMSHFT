@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { addJobRole , removeJobRole , addCompany , removeCompany ,
+         addLocation , removeLocation , addField , removeField } from "../slices/inputSlice";
 
 import Header from "../UI-components/Header";
 import TextInput from "../UI-components/TextInput";
@@ -7,38 +10,49 @@ import Modal from "../UI-components/Modal";
 // Styles for the body element
 document.body.style.backgroundColor = " #000000";
 
-// Styles for the form
-const formStyle = {
-  width: "80%",
-  maxWidth: "600px",
-  margin: "0 auto",
-  textAlign: "left",
-};
-
-
 // Main Home Page component
 
 const Home = () => {
-  const [companies, setCompanies] = useState(
-    JSON.parse(localStorage.getItem("names")) || []
-  );
-  const [jobRoles, setJobRoles] = useState(
-    JSON.parse(localStorage.getItem("jobRoles")) || []
-  );
-  const [locations, setLocations] = useState(
-    JSON.parse(localStorage.getItem("locations")) || []
-  );
-  const [fields, setFields] = useState(
-    JSON.parse(localStorage.getItem("fields")) || []
-  );
 
-  const handleAddEntry = (type, setEntries, entries) => {
-    const newEntry = prompt(`Enter a new ${type}:`);
-    if (newEntry) {
-      const updatedEntries = [...entries, newEntry];
-      setEntries(updatedEntries);
-      localStorage.setItem(type, JSON.stringify(updatedEntries));
-    }
+  const [loading, setLoading] = useState(false)
+  
+  const var_jobRoles = useSelector((state) => state.input.jobRoles);
+  const var_companies = useSelector((state) => state.input.companies);
+  const var_locations = useSelector((state) => state.input.locations);
+  const var_fields = useSelector((state) => state.input.fields);
+
+  const [companies, setCompanies] = useState(var_companies);
+  const [jobRoles, setJobRoles] = useState(var_jobRoles);
+  const [locations, setLocations] = useState(var_locations);
+  const [fields, setFields] = useState(var_fields);
+
+  // Trigger refresh states
+  function triggerRefresh () {
+    setCompanies(var_companies);
+    setJobRoles(var_jobRoles);
+    setLocations(var_locations);
+    setFields(var_fields);
+  }
+
+  // State to control modal
+  const [modalState, setModalState] = useState({
+    isVisible: false,
+    prop: "",
+    setter: () => {},
+  });
+
+  // Open modal with dynamic content
+  const openModal = (name, setter) => {
+    setModalState({
+      isVisible: true,
+      prop: name,
+      setter: setter 
+    });
+  };
+
+  // Close the modal
+  const closeModal = () => {
+    setModalState({ ...modalState, isVisible: false });
   };
 
   const handleRemoveEntry = (type, setEntries, entries, index) => {
@@ -82,20 +96,20 @@ const Home = () => {
     }
 
 
-try{
-    const getResponse = await fetch("http://127.0.0.1:8000/scrape_and_get_details");
+    try{
+        const getResponse = await fetch("http://127.0.0.1:8000/scrape_and_get_details");
 
-    if (!getResponse.ok) {
-      throw new Error("Failed to fetch scraping details");
-    }
+        if (!getResponse.ok) {
+          throw new Error("Failed to fetch scraping details");
+        }
 
-    const getData = await getResponse.json();
-    console.log("GET Success:", getData);
+        const getData = await getResponse.json();
+        console.log("GET Success:", getData);
 
-    // Optionally handle `getData` for UI updates
-  } catch (error) {
-    console.error("Error in handleSubmit:", error);
-  }
+        // Optionally handle `getData` for UI updates
+      } catch (error) {
+        console.error("Error in handleSubmit:", error);
+      }
   };
 
   return (
@@ -116,33 +130,37 @@ try{
           {/* Job Roles Input */}
           <TextInput
             label="Job Roles"
-            entries={jobRoles}
-            onAdd={() => handleAddEntry("jobRoles", setJobRoles, jobRoles)}
-            onRemove={(index) => handleRemoveEntry("jobRoles", setJobRoles, jobRoles, index)}
+            entries={var_jobRoles}
+            onClick={()=>openModal("Job Roles", addJobRole)}
+            onRemove={removeJobRole}
+            refresh={triggerRefresh}
           />
 
           {/* Locations Input */}
           <TextInput
             label="Locations"
-            entries={locations}
-            onAdd={() => handleAddEntry("locations", setLocations, locations)}
-            onRemove={(index) => handleRemoveEntry("locations", setLocations, locations, index)}
+            entries={var_locations}
+            onClick={()=>openModal("Locations", addLocation)}
+            onRemove={removeLocation}
+            refresh={triggerRefresh}
           />
 
           {/* Fields Input */}
           <TextInput
             label="Companies"
-            entries={companies}
-            onAdd={() => handleAddEntry("companies", setCompanies, companies)}
-            onRemove={(index) => handleRemoveEntry("companies", setCompanies, companies, index)}
+            entries={var_companies}
+            onClick={()=>openModal("Companies", addCompany)}
+            onRemove={removeCompany}
+            refresh={triggerRefresh}
           />
 
           {/* Fields Input */}
           <TextInput
             label="Fields"
-            entries={fields}
-            onAdd={() => handleAddEntry("fields", setFields, fields)}
-            onRemove={(index) => handleRemoveEntry("fields", setFields, fields, index)}
+            entries={var_fields}
+            onClick={()=>openModal("Fields", addField)}
+            onRemove={removeField}
+            refresh={triggerRefresh}
           />
         </form>
        
@@ -151,6 +169,8 @@ try{
     <div className="w-4/5 max-w-lg mx-auto">
       <button className="btn ml-0 sm:ml-12" onClick={handleSubmit}>Submit to Proceed</button>
     </div>
+
+    <Modal modalState={modalState} isVisible={modalState.isVisible} onClose={closeModal} refresh={triggerRefresh}/>
       
     </div>
   );

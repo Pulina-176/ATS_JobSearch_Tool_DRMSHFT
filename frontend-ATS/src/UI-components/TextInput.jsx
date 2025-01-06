@@ -1,14 +1,18 @@
 // TextInput component for reusable input fields
+import { useDispatch } from "react-redux";
 
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import AddCircleSharpIcon from "@mui/icons-material/AddCircleSharp";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-
 import Modal from "./Modal.jsx";
 
-const TextInput = ({ label, entries, onAdd, onRemove }) => (
+
+const TextInput = ({ label, entries, onClick, onRemove, refresh }) => {
+  const dispatch = useDispatch();
+
+  return (
   <div className="font-inter">
     <div className="text-md font-regular mb-[5px] text-white">
     {label}
@@ -22,7 +26,10 @@ const TextInput = ({ label, entries, onAdd, onRemove }) => (
         <span style={{ flexGrow: 1 }} className="text-sm">{entry}</span>
         <IconButton
         size="small"
-        onClick={() => onRemove(index)}
+        onClick={() => {
+          dispatch(onRemove(entry));
+          refresh();
+        }}
         style={{ color: "red" }}
         >
         <DeleteIcon fontSize="small" />
@@ -31,16 +38,17 @@ const TextInput = ({ label, entries, onAdd, onRemove }) => (
       ))}
     </div>
 
+    {/* Modal trigger Button */}
     <Button
-      onClick={onAdd}
+      onClick={onClick}
     >
       <AddCircleSharpIcon />
     </Button>
 
-    {/* <Modal/> */}
     </div>
   
   </div>
-  );
+  )
+};
 
   export default TextInput;
