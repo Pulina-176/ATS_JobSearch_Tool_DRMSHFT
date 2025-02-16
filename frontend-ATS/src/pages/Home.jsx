@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; //new
 import { useSelector } from "react-redux";
 import { addJobRole , removeJobRole , addCompany , removeCompany ,
          addLocation , removeLocation , addField , removeField } from "../slices/inputSlice";
@@ -16,6 +17,8 @@ document.body.style.backgroundColor = " #000000";
 const Home = () => {
 
   const [loading, setLoading] = useState(false)
+  const [scrapedData, setScrapedData] = useState(null); // State for backend data new
+  const navigate = useNavigate(); // Use navigate hook for routing new
   
   const var_jobRoles = useSelector((state) => state.input.jobRoles);
   const var_companies = useSelector((state) => state.input.companies);
@@ -102,11 +105,15 @@ const Home = () => {
         }
 
         const getData = await getResponse.json();
-        console.log("GET Success:", getData);
+        //console.log("GET Success:", getData); 
+        setScrapedData(getData); // Store data in state new
+        setLoading(false); //new
+        navigate("/results", { state: { data:getData.data } }); // Navigate to results page new
 
         // Optionally handle `getData` for UI updates
       } catch (error) {
         console.error("Error in handleSubmit:", error);
+        setLoading(false); //new
       }
   };
 
