@@ -1,9 +1,14 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Display = () => {
   const location = useLocation();
   const selectedJobs = location.state?.selectedJobs || [];
+  const navigate = useNavigate();
+
+  const handlePdfPreview = () => {
+    navigate("/preview", { state: { selectedJobs } });
+  }
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-10">
@@ -30,6 +35,12 @@ const Display = () => {
           <p>No jobs selected.</p>
         )}
       </div>
+      <button
+        className="mt-6 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        onClick={
+          handlePdfPreview
+        }
+      > Print JOBDES Report </button>
     </div>
   );
 };

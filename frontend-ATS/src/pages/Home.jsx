@@ -78,7 +78,7 @@ const Home = () => {
     console.log("Sending data:", mergedData);  
   
     try {
-      const response = await fetch("http://127.0.0.1:8000/scrape_jobs", {
+      const response = await fetch("http://127.0.0.1:8000/load_inputs", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
