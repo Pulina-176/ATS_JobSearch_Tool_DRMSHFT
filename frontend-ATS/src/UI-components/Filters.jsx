@@ -12,6 +12,8 @@ const Filters = ({ allJobs, setFilteredJobs }) => {
   const countries = [...new Set(allJobs.map((job) => job.location))];
   const companies = [...new Set(allJobs.map((job) => job.company))];
 
+  let newTitles = {}
+
   // Apply filtering logic
   const applyFilters = () => {
     let filtered = allJobs;

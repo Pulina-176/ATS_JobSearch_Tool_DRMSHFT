@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate} from "react-router-dom";
 import Filters from "../UI-components/Filters";
-import JobDescription from "../UI-components/Jobdescription";
+import JobDescription from "../UI-components/JobDescription";
 
 const Results = () => {
   const location = useLocation();
@@ -11,6 +11,16 @@ const Results = () => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedJobs, setSelectedJobs] = useState([]);
+
+  useEffect(() => {
+    fetchTitleDict();
+  }, [allJobs]);
+
+  // map current available job titles to a new job title dictionary (created by AI)
+  const fetchTitleDict = () => {
+    const jobTitleList = allJobs.map((job) => job.title);
+    console.log("jobTitleList: ", jobTitleList);
+  }
 
   const handleJobClick = (job) => {
     setSelectedJob(job.full_description);
