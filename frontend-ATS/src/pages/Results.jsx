@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate} from "react-router-dom";
 import Filters from "../UI-components/Filters";
+
 import JobDescription from "../UI-components/JobDescription";
+import Processing from "../UI-components/Processing";
 
 const Results = () => {
   const location = useLocation();
@@ -12,14 +14,44 @@ const Results = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedJobs, setSelectedJobs] = useState([]);
 
+  const [isProcessing, setIsProcessing] = useState(true);
+
+  const [jobTitleDict, setJobTitleDict] = useState({});
+
   useEffect(() => {
     fetchTitleDict();
   }, [allJobs]);
 
   // map current available job titles to a new job title dictionary (created by AI)
-  const fetchTitleDict = () => {
+  const fetchTitleDict = async () => {
     const jobTitleList = allJobs.map((job) => job.title);
     console.log("jobTitleList: ", jobTitleList);
+    try {
+      const response = await fetch("http://127.0.0.1:8000/job_titles_ai", {  // fetch job titles from gemini
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ jobTitleList }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json()
+
+      const text = data.data;
+      const cleanedJSONString = text.trim().replace(/^```json|```$/g, '');  // clean the JSON string
+
+      setJobTitleDict(JSON.parse(cleanedJSONString))  // wait for JSON parsing
+      setIsProcessing(false);
+
+    } catch (error) {
+      console.error("Error fetching jobTitles:", error);
+      return { error: error.message };
+    }
+
   }
 
   const handleJobClick = (job) => {
@@ -44,11 +76,15 @@ const Results = () => {
     navigate("/display", { state: { selectedJobs } }); // Navigate to the selected jobs page
   };
 
+  if (isProcessing) {
+    return <Processing />
+  }
+
   return (
     <div className="flex min-h-screen bg-gray-900 text-white">
       {/* Sidebar for Filters */}
       <div className="w-1/4 p-4 bg-gray-800 shadow-md">
-        <Filters allJobs={allJobs} setFilteredJobs={setFilteredJobs} />
+        <Filters allJobs={allJobs} setFilteredJobs={setFilteredJobs} AI_DICT={jobTitleDict} />
       </div>
 
       {/* Main Content for Job Listings */}

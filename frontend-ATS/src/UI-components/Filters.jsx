@@ -1,18 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const Filters = ({ allJobs, setFilteredJobs }) => {
+const Filters = ({ allJobs, setFilteredJobs, AI_DICT }) => {
+
   const [selectedJobTitles, setSelectedJobTitles] = useState([]);
   const [selectedSources, setSelectedSources] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedCompany, setSelectedCompany] = useState("");
 
   // Extract unique values from jobs data
-  const jobTitles = [...new Set(allJobs.map((job) => job.title))];
+  const jobTitles = [...new Set(Object.keys(AI_DICT).map((key) => key))];
   const sources = [...new Set(allJobs.map((job) => job.source))];
   const countries = [...new Set(allJobs.map((job) => job.location))];
   const companies = [...new Set(allJobs.map((job) => job.company))];
 
   let newTitles = {}
+
+  function updateNewTitles (AI_DICT) {
+    Object.keys(AI_DICT).forEach((key) => {
+      newTitles[key] = AI_DICT[key]
+    })
+    console.log("newTitles: ", newTitles)
+  }
+
+  useEffect(() => {
+    updateNewTitles(AI_DICT)
+  }, [AI_DICT])
 
   // Apply filtering logic
   const applyFilters = () => {
@@ -57,12 +69,24 @@ const Filters = ({ allJobs, setFilteredJobs }) => {
             type="checkbox"
             value={title}
             onChange={(e) => {
-              const value = e.target.value;
-              setSelectedJobTitles(
-                selectedJobTitles.includes(value)
-                  ? selectedJobTitles.filter((t) => t !== value)
-                  : [...selectedJobTitles, value]
-              );
+              const value = AI_DICT[e.target.value]; 
+
+              let temp_list = [] // temporary list to store selected job titles
+              selectedJobTitles.forEach((value)=>temp_list.push(value)) // copy current job titles to temp_list
+
+              if(e.target.checked){ // checkbox is checked event
+                value.forEach((item) => {
+                  temp_list.push(item)
+                })
+              }
+              else { // checkbox is unchecked event
+                value.forEach((item) => {
+                  temp_list = temp_list.filter((s) => s !== item)
+                })
+              }
+
+              setSelectedJobTitles(temp_list);
+              console.log("selectedJobTitles: ", selectedJobTitles)
             }}
           />
           <span>{title}</span>
