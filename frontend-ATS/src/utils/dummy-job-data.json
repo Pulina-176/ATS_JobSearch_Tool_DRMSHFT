@@ -1,0 +1,74 @@
+{
+    "jobListings": [
+      {
+        "id": 1,
+        "title": "Senior Full Stack Developer",
+        "country": "United States",
+        "platform": "LinkedIn",
+        "link": "https://www.example.com/job/senior-full-stack-developer-position-new-york-react-node-aws-remote-friendly"
+      },
+      {
+        "id": 2,
+        "title": "Data Scientist - Machine Learning",
+        "country": "Germany",
+        "platform": "Indeed",
+        "link": "https://www.example.com/job/data-scientist-machine-learning-berlin-tensorflow-python-phd-preferred"
+      },
+      {
+        "id": 3,
+        "title": "UX/UI Designer",
+        "country": "Canada",
+        "platform": "Glassdoor",
+        "link": "https://www.example.com/job/ux-ui-designer-toronto-fintech-startup-figma-sketch-user-research"
+      },
+      {
+        "id": 4,
+        "title": "DevOps Engineer",
+        "country": "United Kingdom",
+        "platform": "Company Website",
+        "link": "https://www.example.com/job/devops-engineer-london-kubernetes-aws-terraform-ci-cd-pipelines"
+      },
+      {
+        "id": 5,
+        "title": "Product Manager",
+        "country": "Australia",
+        "platform": "AngelList",
+        "link": "https://www.example.com/job/product-manager-sydney-saas-agile-experience-b2b-growth"
+      },
+      {
+        "id": 6,
+        "title": "Frontend Developer",
+        "country": "India",
+        "platform": "Stack Overflow Jobs",
+        "link": "https://www.example.com/job/frontend-developer-bangalore-react-redux-typescript-material-ui"
+      },
+      {
+        "id": 7,
+        "title": "Backend Engineer (Java)",
+        "country": "Singapore",
+        "platform": "Wellfound",
+        "link": "https://www.example.com/job/backend-engineer-java-singapore-spring-boot-microservices-postgres"
+      },
+      {
+        "id": 8,
+        "title": "Mobile App Developer (React Native)",
+        "country": "Netherlands",
+        "platform": "Remote OK",
+        "link": "https://www.example.com/job/mobile-app-developer-amsterdam-react-native-ios-android-redux"
+      },
+      {
+        "id": 9,
+        "title": "AI Research Scientist",
+        "country": "France",
+        "platform": "HackerNews",
+        "link": "https://www.example.com/job/ai-research-scientist-paris-deep-learning-computer-vision-nlp-phd-required"
+      },
+      {
+        "id": 10,
+        "title": "Technical Project Manager",
+        "country": "Sweden",
+        "platform": "GitHub Jobs",
+        "link": "https://www.example.com/job/technical-project-manager-stockholm-agile-scrum-master-software-development"
+      }
+    ]
+  }

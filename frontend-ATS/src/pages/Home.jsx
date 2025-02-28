@@ -78,7 +78,7 @@ const Home = () => {
     console.log("Sending data:", mergedData);  
   
     try {
-      const response = await fetch("http://127.0.0.1:8000/scrape_jobs", {
+      const response = await fetch("http://127.0.0.1:8000/load_inputs", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -123,7 +123,7 @@ const Home = () => {
       <Header/>
 
       <div className="p-10 self-center">
-        <h1 className="text-white font-bold text-left text-[36px]">Welcome to the DreamShift Job Search Tool</h1>
+        <h1 className="text-white font-bold text-left text-[36px]">Welcome to the DreamShift Job Search Tool Test</h1>
         <h1 className="text-white font-semibold text-left text-lg">Provide the required details to perform the job search</h1>
 
       </div>
