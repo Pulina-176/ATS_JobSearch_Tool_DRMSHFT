@@ -1,6 +1,6 @@
 import React, { useEffect , useState } from "react";
 import { useSelector , useDispatch } from "react-redux";
-import { addJob , removeJob } from "../slices/atsDataSlice";
+import { addJob } from "../slices/atsDataSlice";
 
 // Input props:
 // - description: raw job description

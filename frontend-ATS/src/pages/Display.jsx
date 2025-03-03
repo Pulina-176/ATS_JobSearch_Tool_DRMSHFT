@@ -1,13 +1,74 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 
 const Display = () => {
   const location = useLocation();
   const selectedJobs = location.state?.selectedJobs || [];
   const navigate = useNavigate();
 
+  const jobsToATS = useSelector((state) => state.atsData.jobs); // get the current state of jobs in the store
+
+  let ATSjobList = {} // hash table to send jobs for ATS report
+
+  // function to add jobs occupy ATSjobList hash table
+  function occupyATSjobList (jobList) {
+    jobList.map((job) => {
+      if (!(job.title in ATSjobList)) {
+        ATSjobList[job.title] = []
+        ATSjobList[job.title].push(job.description)
+      }
+      else {
+        ATSjobList[job.title].push(job.description)
+      } 
+    })
+  }
+
+  async function getATSkeywords (title, descriptions) {
+
+    const JobRole = { // to send to backend for ATS keyword functions - refer main.py for object reference
+      jobRole: title,
+      descriptions: descriptions
+    }
+
+    console.log("Sending data:", { title, descriptions });  
+    
+    try{
+      const response = await fetch("http://127.0.0.1:8000/ats_test", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(JobRole),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const data = await response.json();  // wait for JSON parsing
+      const text = data.data 
+      console.log("Success:", text);
+
+    }
+    catch(error){
+      console.error("Error in getATSkeywords:", error);
+      return { error: error.message };
+    }
+  }
+  
+
   const handlePdfPreview = () => {
     navigate("/preview", { state: { selectedJobs } });
+  }
+
+  const handleATSReport = () => {
+    occupyATSjobList(jobsToATS)
+    console.log(ATSjobList)
+    for (const [key, value] of Object.entries(ATSjobList)) {
+      getATSkeywords(key, JSON.stringify(value))
+    }
   }
 
   return (
@@ -41,9 +102,9 @@ const Display = () => {
           handlePdfPreview
         }
       > Print JOBDES Report </button>
-            <button
-        className="mt-6 px-4 py-2 mx-2 bg-teal-800 text-white rounded hover:bg-blue-600"
-        onClick={()=>console.log("developing...")}
+      <button
+        className="mt-6 px-4 py-2 mx-2 bg-teal-800 text-white rounded hover:bg-teal-600"
+        onClick={()=>handleATSReport()}
       > Get ATS Report </button>
     </div>
   );

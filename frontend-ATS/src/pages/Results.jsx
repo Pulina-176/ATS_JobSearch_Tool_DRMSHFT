@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate} from "react-router-dom";
 import { useSelector , useDispatch } from "react-redux";
 import { getKeyByValue } from "../utils/simple_functions";
-import { clearJobs } from "../slices/atsDataSlice";
+import { addJob , clearJobs } from "../slices/atsDataSlice";
 
 import Filters from "../UI-components/Filters";
 import JobDescription from "../UI-components/JobDescription";
 import Processing from "../UI-components/Processing";
+import CustomLoading from "../UI-components/CustomLoading";
 
 const Results = () => {
   const location = useLocation();
@@ -23,14 +24,79 @@ const Results = () => {
   const [selectedJobs, setSelectedJobs] = useState([]);
 
   const [isProcessing, setIsProcessing] = useState(true);
+  const [isGenerating, setIsGenerating] = useState(false); // State for mass job description generation at job submission
 
   const [jobTitleDict, setJobTitleDict] = useState({});
 
   
   const dispatch = useDispatch(); // to dispatch actions to the store
+  const jobsInStore = useSelector((state) => state.atsData.jobs.map(job => job.id)); // get list of jobs (ids) in the redux store currently
 
   function clearAllJobsInREDUX () { // clear all jobs in the store when refreshed
     dispatch(clearJobs());
+  }
+
+  async function getDescription (description) {  // fetch json format for raw description from gemini
+    if (!description) {
+      return { error: "No description available." };
+    }
+    
+    try {
+      const response = await fetch("http://127.0.0.1:8000/job_description_ai", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ description }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const data = await response.json();  // wait for JSON parsing
+      const text = data.data;
+      const cleanedJSONString = text.trim().replace(/^```json|```$/g, '');  // clean the JSON string
+            
+      return cleanedJSONString;
+
+    } catch (error) {
+      console.error("Error fetching description:", error);
+      return { error: error.message };
+    }
+  }
+
+  const parseDescription = (description) => {  // for parsing the description into JSON form
+    try {
+      const jsonDescription = JSON.parse(description);
+      console.log(jsonDescription);
+      return jsonDescription      
+    } catch (error) {
+      console.error("Invalid JSON:", error);
+    }
+  }
+
+  async function addSelectedJobsToStore (selectedJobs) { // add selected jobs to the store
+
+    setIsGenerating(true);
+
+    const jobsToAdd = // set up a Promise
+      selectedJobs.filter((job) => !jobsInStore.includes(job.link_no)) // filter out jobs already in the store
+                  .map(async(job) => { // asynchoronus for fetching purposes
+
+                    const fetchedDescription = await getDescription(job.full_description);
+                    const formatted = await parseDescription(fetchedDescription); // AI generated description
+
+                    const jobToAdd = {
+                      title: getKeyByValue(jobTitleDict, job.title),
+                      description: formatted,
+                      raw_title: job.title,
+                      id: job.link_no
+                    }
+                    dispatch(addJob(jobToAdd)); // add job to the store
+                  });
+
+    return Promise.all(jobsToAdd); // wait for all jobs to be added
   }
 
 
@@ -91,12 +157,21 @@ const Results = () => {
     );
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    await addSelectedJobsToStore(selectedJobs); // Add selected jobs to the store
+    setIsGenerating(false);
     navigate("/display", { state: { selectedJobs } }); // Navigate to the selected jobs page
   };
 
   if (isProcessing) {
     return <Processing />
+  }
+
+  const message1 = "Generating Job Descriptions";
+  const message2 = "Please wait...";
+
+  if (isGenerating) {
+    return <CustomLoading message1={message1} message2={message2}/>
   }
 
   return (
@@ -123,7 +198,7 @@ const Results = () => {
                 </label>
               <div key={index} className="p-4 rounded-lg bg-gray-800 shadow-md cursor-pointer flex-1 min-h-[100px] w-full" 
                                onClick={() => {
-                                            setSelectedJobID(index+1) // to get a unique ID for each job. Added as an extension for handleJobClick
+                                            setSelectedJobID(job.link_no) // to get a unique ID for each job. Added as an extension for handleJobClick
                                             handleJobClick(job)
                                           }}
                                >
