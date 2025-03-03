@@ -1,18 +1,78 @@
 import React, { useEffect , useState } from "react";
-import { json } from "react-router-dom";
+import { useSelector , useDispatch } from "react-redux";
+import { addJob , removeJob } from "../slices/atsDataSlice";
 
-const JobDescription = ({ description, onClose }) => {
+// Input props:
+// - description: raw job description
+// - onClose    : function to close the modal
+// - title      : job title, as of the relevant category raw job title falls under
+// - raw_title  : raw job title
+// - id         : job id (for identification purpose only)
+const JobDescription = ({ description, onClose, title, raw_title, id }) => {
+
+  const dispatch = useDispatch(); // to dispatch actions to the store
+  const jobsInRedux = useSelector((state) => state.atsData.jobs); // get the current state of jobs in the store
+
+  function addJobToRedux (gen_description) {
+    const job = {
+      title: title,
+      description: gen_description,  // generated from AI
+      raw_title: raw_title,
+      id: id
+    }
+
+    dispatch(addJob(job)); // add job to the store
+  }
+
+  function getJobFromRedux (id) { // get job description from the store if available
+    const job = jobsInRedux.find((job) => job.id === id);
+    if (job && job.description!==""){
+      setFormattedDescription(job.description);
+      return true;
+    }
+    else return false;
+  }
+
+  const JobRole = { // to send to backend for ATS keyword functions - refer main.py for object reference
+    jobRole: title,
+    description: description
+  }
 
   const [formattedDescription, setFormattedDescription] = useState(null);
   const [isGenerating, setIsGenerating] = useState(true);
 
+  const getATSkeywords = async (title, description) => {
+    console.log("Sending data:", { title, description });  
+    
+    try{
+      const response = await fetch("http://127.0.0.1:8000/ats_test", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(JobRole),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const data = await response.json();  // wait for JSON parsing
+      const text = data.data 
+      console.log("Success:", text);
+
+    }
+    catch(error){
+      console.error("Error in getATSkeywords:", error);
+      return { error: error.message };
+    }
+  }
+  
   const getDescription = async (description) => {  // fetch json format for raw description from gemini
     if (!description) {
       return { error: "No description available." };
     }
-  
-    console.log("Sending data:", { description }); 
-  
+    
     try {
       const response = await fetch("http://127.0.0.1:8000/job_description_ai", {
         method: "POST",
@@ -31,7 +91,7 @@ const JobDescription = ({ description, onClose }) => {
       const cleanedJSONString = text.trim().replace(/^```json|```$/g, '');  // clean the JSON string
       
       setFormattedDescription(cleanedJSONString);
-      setIsGenerating(false); 
+      setIsGenerating(false); // stop loading animation
       
       return cleanedJSONString;
 
@@ -51,17 +111,33 @@ const JobDescription = ({ description, onClose }) => {
     }
   }
 
+
   useEffect(() => {
     async function fetchAndFormat() {
-      const fetchedDescription = await getDescription(description);
-      const formatted = parseDescription(fetchedDescription);
 
-      setFormattedDescription(formatted)
-      setIsGenerating(false);
+      const check_store = getJobFromRedux(id);
+
+      if (check_store) {
+        setIsGenerating(false);
+      }
+
+      else {
+        const fetchedDescription = await getDescription(description);
+        const formatted = parseDescription(fetchedDescription);
+
+        addJobToRedux(formatted); // add job to the store
+
+        // getATSkeywords(title, description); // testing ATS research
+
+        setFormattedDescription(formatted)
+        setIsGenerating(false);
+      }
     }
 
     fetchAndFormat();
   }, []);
+
+
 
   if (!description) return null;
   if (isGenerating) return <p>Smart scraping job description... Powered by Gemini</p>;

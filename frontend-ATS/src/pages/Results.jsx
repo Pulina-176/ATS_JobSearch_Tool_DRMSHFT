@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate} from "react-router-dom";
-import Filters from "../UI-components/Filters";
+import { useSelector , useDispatch } from "react-redux";
+import { getKeyByValue } from "../utils/simple_functions";
+import { clearJobs } from "../slices/atsDataSlice";
 
+import Filters from "../UI-components/Filters";
 import JobDescription from "../UI-components/JobDescription";
 import Processing from "../UI-components/Processing";
 
@@ -10,16 +13,30 @@ const Results = () => {
   const navigate = useNavigate();
   const allJobs = location.state?.data || []; // Get the data from navigation state
   const [filteredJobs, setFilteredJobs] = useState(allJobs);
-  const [selectedJob, setSelectedJob] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [selectedJob, setSelectedJob] = useState(null);  // State for job description of currently clicked job
+  const [selectedJobID, setSelectedJobID] = useState(null);  // State for job ID of currently clicked job
+  const [selectedJobTitle, setSelectedJobTitle] = useState(null);  // State for job title of currently clicked job
+
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for Job Description Modal
+
   const [selectedJobs, setSelectedJobs] = useState([]);
 
   const [isProcessing, setIsProcessing] = useState(true);
 
   const [jobTitleDict, setJobTitleDict] = useState({});
 
+  
+  const dispatch = useDispatch(); // to dispatch actions to the store
+
+  function clearAllJobsInREDUX () { // clear all jobs in the store when refreshed
+    dispatch(clearJobs());
+  }
+
+
   useEffect(() => {
     fetchTitleDict();
+    clearAllJobsInREDUX(); 
   }, [allJobs]);
 
   // map current available job titles to a new job title dictionary (created by AI)
@@ -54,14 +71,16 @@ const Results = () => {
 
   }
 
-  const handleJobClick = (job) => {
+  const handleJobClick = (job) => { // Open the modal with the job description
     setSelectedJob(job.full_description);
+    setSelectedJobTitle(job.title);
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false); // Close the modal
     setSelectedJob(null); // Clear the selected job description
+    setSelectedJobTitle(null); // Clear the selected job title
   };
 
   const handleCheckboxChange = (job) => {
@@ -102,7 +121,12 @@ const Results = () => {
                     onChange={() => handleCheckboxChange(job)}
                   />
                 </label>
-              <div key={index} className="p-4 rounded-lg bg-gray-800 shadow-md cursor-pointer flex-1 min-h-[100px] w-full" onClick={() => handleJobClick(job)}>
+              <div key={index} className="p-4 rounded-lg bg-gray-800 shadow-md cursor-pointer flex-1 min-h-[100px] w-full" 
+                               onClick={() => {
+                                            setSelectedJobID(index+1) // to get a unique ID for each job. Added as an extension for handleJobClick
+                                            handleJobClick(job)
+                                          }}
+                               >
                 <h2 className="text-xl font-semibold">{job.title}</h2>
                 <p className="text-sm">Company: {job.company}</p>
                 <p className="text-sm">Location: {job.location}</p>
@@ -134,7 +158,7 @@ const Results = () => {
       </div>
       {/* Job Description Modal */}
       {isModalOpen && (
-        <JobDescription description={selectedJob} onClose={closeModal} />
+        <JobDescription description={selectedJob} onClose={closeModal} title={getKeyByValue(jobTitleDict, selectedJobTitle)} raw_title={selectedJobTitle} id={selectedJobID}/>
       )}
     </div>
   );
