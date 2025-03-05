@@ -40,33 +40,6 @@ const JobDescription = ({ description, onClose, title, raw_title, id }) => {
 
   const [formattedDescription, setFormattedDescription] = useState(null);
   const [isGenerating, setIsGenerating] = useState(true);
-
-  const getATSkeywords = async (title, description) => {
-    console.log("Sending data:", { title, description });  
-    
-    try{
-      const response = await fetch("http://127.0.0.1:8000/ats_test", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(JobRole),
-      })
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-  
-      const data = await response.json();  // wait for JSON parsing
-      const text = data.data 
-      console.log("Success:", text);
-
-    }
-    catch(error){
-      console.error("Error in getATSkeywords:", error);
-      return { error: error.message };
-    }
-  }
   
   const getDescription = async (description) => {  // fetch json format for raw description from gemini
     if (!description) {
@@ -126,8 +99,6 @@ const JobDescription = ({ description, onClose, title, raw_title, id }) => {
         const formatted = parseDescription(fetchedDescription);
 
         addJobToRedux(formatted); // add job to the store
-
-        // getATSkeywords(title, description); // testing ATS research
 
         setFormattedDescription(formatted)
         setIsGenerating(false);

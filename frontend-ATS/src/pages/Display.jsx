@@ -10,7 +10,9 @@ const Display = () => {
 
   const jobsToATS = useSelector((state) => state.atsData.jobs); // get the current state of jobs in the store
 
-  let ATSjobList = {} // hash table to send jobs for ATS report
+  let ATSjobList = {} // hash table to send jobs for ATS report. This is the data set used to generate the ATS Report
+
+  let ATSReport = [] // array to store ATS report data (fetched from gemini)
 
   // function to add jobs occupy ATSjobList hash table
   function occupyATSjobList (jobList) {
@@ -49,7 +51,16 @@ const Display = () => {
   
       const data = await response.json();  // wait for JSON parsing
       const text = data.data 
-      console.log("Success:", text);
+      const cleanedJSONString = text.trim().replace(/^```json|```$/g, '');  // clean the JSON string
+      const parsedJSON = JSON.parse(cleanedJSONString);
+      console.log("Success:", parsedJSON);
+
+      const ATS_data_set = {
+        title: title,
+        keywords: parsedJSON
+      }
+
+      return ATS_data_set;
 
     }
     catch(error){
@@ -63,12 +74,15 @@ const Display = () => {
     navigate("/preview", { state: { selectedJobs } });
   }
 
-  const handleATSReport = () => {
+  const handleATSReport = async () => {
     occupyATSjobList(jobsToATS)
-    console.log(ATSjobList)
+
     for (const [key, value] of Object.entries(ATSjobList)) {
-      getATSkeywords(key, JSON.stringify(value))
+      const result = await getATSkeywords(key, JSON.stringify(value)); // Wait for each async call
+      ATSReport.push(result);
     }
+
+    navigate("/ats-preview", { state: { ATSdata:ATSReport } }); // Navigate to ats-preview page
   }
 
   return (
