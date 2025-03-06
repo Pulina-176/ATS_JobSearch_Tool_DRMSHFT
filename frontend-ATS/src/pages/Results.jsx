@@ -76,7 +76,7 @@ const Results = () => {
     }
   }
 
-  async function addSelectedJobsToStore (selectedJobs) { // add selected jobs to the store
+  async function addSelectedJobsToStore (selectedJobs) { // add selected jobs to the Redux store
 
     setIsGenerating(true);
 
@@ -167,7 +167,7 @@ const Results = () => {
     return <Processing />
   }
 
-  const message1 = "Generating Job Descriptions";
+  const message1 = "Working on the Job Descriptions";
   const message2 = "Please wait...";
 
   if (isGenerating) {

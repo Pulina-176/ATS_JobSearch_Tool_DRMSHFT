@@ -1,9 +1,14 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useState } from "react";
+
+import CustomLoading from "../UI-components/CustomLoading";
 
 
 const Display = () => {
+  const [isProcessing, setIsProcessing] = useState(false);
+
   const location = useLocation();
   const selectedJobs = location.state?.selectedJobs || [];
   const navigate = useNavigate();
@@ -28,6 +33,7 @@ const Display = () => {
   }
 
   async function getATSkeywords (title, descriptions) {
+    setIsProcessing(true);
 
     const JobRole = { // to send to backend for ATS keyword functions - refer main.py for object reference
       jobRole: title,
@@ -82,7 +88,17 @@ const Display = () => {
       ATSReport.push(result);
     }
 
+    setIsProcessing(false); // Stop the loading spinner
+
     navigate("/ats-preview", { state: { ATSdata:ATSReport } }); // Navigate to ats-preview page
+  }
+
+  // Loading screen messages
+  const message1 = "ATS Research in Progress";
+  const message2 = "Please wait...";
+
+  if (isProcessing) {
+    return <CustomLoading message1={message1} message2={message2}/>
   }
 
   return (

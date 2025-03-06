@@ -1,7 +1,9 @@
 import React from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation , useNavigate } from 'react-router-dom'
 
 const ATS = () => {
+
+    const navigate = useNavigate();
 
     const location = useLocation();
     const KeyWordSets = location.state?.ATSdata || []; // Get the data from navigation state
@@ -13,6 +15,7 @@ const ATS = () => {
 
             <div className='bg-white p-8 rounded-lg shadow-lg w-full max-w-5xl'>
                 <h1 className='text-2xl font-bold mb-6 text-center text-black'>ATS Keyword Report</h1>
+                <button className='bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded' onClick={() => navigate('/ats-edit', { state: { ATSdata:KeyWordSets} })}>Make Changes</button>
 
                 {KeyWordSets.map((Set, index) => (
                     <div className='overflow-x-auto' key={index}>
