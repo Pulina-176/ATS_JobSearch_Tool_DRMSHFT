@@ -7,18 +7,6 @@ const PdfPreview = () => {
   const location = useLocation();
   const jobListings = location.state?.selectedJobs || [];
 
-  // let jobTitles = [
-  //   "Operations Manager Bank",
-  //   "Administrative & Account Assistant",
-  //   "Administrative Assistant",
-  // ];
-  // let countries = ["Dubai", "Dubai", "Dubai"];
-  // let platforms = ["Jooble", "Indeed", "Indeed"];
-  // let links = [
-  //   "https://ae.jooble.org/jdp/3874374147157176006",
-  //   "https://devjobs.lk/dev-jobs/client/ads/215?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
-  //   "hhttps://devjobs.lk/dev-jobs/client/ads/215?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
-  // ];
   let jobTitles = [];
   let countries = [];
   let platforms = [];
@@ -37,10 +25,6 @@ const PdfPreview = () => {
 
     createPdf(jobTitles, countries, platforms, links);
   }
-
-  
-
-
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 p-4">

@@ -6,6 +6,8 @@ import Home from './pages/Home';
 import PdfPreview from './pages/PdfPreview';
 import Results from "./pages/Results";
 import Display from "./pages/Display";
+import ATS from "./pages/ATS";
+import ATS_Edit from './pages/ATS-edit';
 
 
 export default function App() {
@@ -15,6 +17,8 @@ export default function App() {
       <Route path="/preview" element={<PdfPreview/>} />
       <Route path="/results" element={<Results />} />
       <Route path="/display" element={<Display />} />
+      <Route path="/ats-preview" element={<ATS />} />
+      <Route path="/ats-edit" element={<ATS_Edit />} />
       
     </Routes>
   )
