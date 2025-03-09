@@ -10,6 +10,8 @@ import { addJob } from "../slices/atsDataSlice";
 // - id         : job id (for identification purpose only)
 const JobDescription = ({ description, onClose, title, raw_title, id }) => {
 
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
   const dispatch = useDispatch(); // to dispatch actions to the store
   const jobsInRedux = useSelector((state) => state.atsData.jobs); // get the current state of jobs in the store
 
@@ -47,7 +49,7 @@ const JobDescription = ({ description, onClose, title, raw_title, id }) => {
     }
     
     try {
-      const response = await fetch("http://127.0.0.1:8000/job_description_ai", {
+      const response = await fetch(`${BACKEND_URL}/job_description_ai`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

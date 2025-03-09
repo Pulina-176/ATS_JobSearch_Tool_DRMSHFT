@@ -10,6 +10,9 @@ import CustomLoading from "../UI-components/CustomLoading";
 import AddJob from "../UI-components/AddJob";
 
 const Results = () => {
+
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
   const location = useLocation();
   const navigate = useNavigate();
   const [allJobs, setAllJobs] = useState(location.state?.data || []); // Get the data from navigation state
@@ -42,7 +45,7 @@ const Results = () => {
     }
     
     try {
-      const response = await fetch("http://127.0.0.1:8000/job_description_ai", {
+      const response = await fetch(`${BACKEND_URL}/job_description_ai`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -111,7 +114,7 @@ const Results = () => {
     const jobTitleList = allJobs.map((job) => job.title);
     console.log("jobTitleList: ", jobTitleList);
     try {
-      const response = await fetch("http://127.0.0.1:8000/job_titles_ai", {  // fetch job titles from gemini
+      const response = await fetch(`${BACKEND_URL}/job_titles_ai`, {  // fetch job titles from gemini
         method: "POST",
         headers: {
           "Content-Type": "application/json",

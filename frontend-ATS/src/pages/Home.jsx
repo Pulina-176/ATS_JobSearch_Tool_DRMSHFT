@@ -16,6 +16,8 @@ document.body.style.backgroundColor = " #000000";
 
 const Home = () => {
 
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
   const [loading, setLoading] = useState(false)
   const [scrapedData, setScrapedData] = useState(null); // State for backend data new
   const navigate = useNavigate(); // Use navigate hook for routing new
@@ -78,7 +80,7 @@ const Home = () => {
     console.log("Sending data:", mergedData);  
   
     try {
-      const response = await fetch("http://127.0.0.1:8000/load_inputs", {
+      const response = await fetch(`${BACKEND_URL}/load_inputs`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -98,7 +100,7 @@ const Home = () => {
 
 
     try{
-        const getResponse = await fetch("http://127.0.0.1:8000/scrape_and_get_details");
+        const getResponse = await fetch(`${BACKEND_URL}/scrape_and_get_details`);
 
         if (!getResponse.ok) {
           throw new Error("Failed to fetch scraping details");
