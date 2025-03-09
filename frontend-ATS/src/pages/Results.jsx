@@ -6,13 +6,13 @@ import { addJob , clearJobs } from "../slices/atsDataSlice";
 
 import Filters from "../UI-components/Filters";
 import JobDescription from "../UI-components/JobDescription";
-import Processing from "../UI-components/Processing";
 import CustomLoading from "../UI-components/CustomLoading";
+import AddJob from "../UI-components/AddJob";
 
 const Results = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const allJobs = location.state?.data || []; // Get the data from navigation state
+  const [allJobs, setAllJobs] = useState(location.state?.data || []); // Get the data from navigation state
   const [filteredJobs, setFilteredJobs] = useState(allJobs);
 
   const [selectedJob, setSelectedJob] = useState(null);  // State for job description of currently clicked job
@@ -103,6 +103,7 @@ const Results = () => {
   useEffect(() => {
     fetchTitleDict();
     clearAllJobsInREDUX(); 
+    getNextJobID();
   }, [allJobs]);
 
   // map current available job titles to a new job title dictionary (created by AI)
@@ -163,12 +164,34 @@ const Results = () => {
     navigate("/display", { state: { selectedJobs } }); // Navigate to the selected jobs page
   };
 
-  if (isProcessing) {
-    return <Processing />
+  // State management for the Add Job Modal
+  const [isOpened, setIsOpened] = useState(false);
+  const openAddJobModal = () => setIsOpened(true);
+  const closeAddJobModal = () => setIsOpened(false);
+
+  // The nextJobID is the value needed to assign a unique ID to each job
+  const [nextJobID, setNextJobID] = useState(0);
+
+  async function getNextJobID() { // get the next job ID during first load of page
+    const jobIDList = allJobs.map((job) => job.link_no);
+    const maxID = Math.max(...jobIDList);
+    setNextJobID(maxID + 1);
   }
 
-  const message1 = "Working on the Job Descriptions";
-  const message2 = "Please wait...";
+  useEffect(() => {
+    setFilteredJobs(allJobs); // Update filteredJobs whenever allJobs changes
+  }, [allJobs]);
+
+
+  const message3 = "Setting up Filters"
+  const message4 = "utilizing full power of AI"
+
+  if (isProcessing) {
+    return <CustomLoading message1={message3} message2={message4}/>
+  }
+
+  const message1 = "AI is working on the Job Descriptions";
+  const message2 = "Stay tuned for the results";
 
   if (isGenerating) {
     return <CustomLoading message1={message1} message2={message2}/>
@@ -183,7 +206,19 @@ const Results = () => {
 
       {/* Main Content for Job Listings */}
       <div className="w-3/4 p-10">
-        <h1 className="text-2xl font-bold mb-5">Your Results</h1>
+
+        <div className="flex flex-row justify-between my-2">
+          <h1 className="text-2xl font-bold mb-5">Your Results</h1>
+          <button
+            className="px-2 btn-md bg-blue-500 text-white rounded hover:bg-blue-600"
+            onClick={openAddJobModal}
+          >
+            Add Job Manually
+          </button>
+        </div>
+
+        <AddJob visible={isOpened} closeModal={closeAddJobModal} id={nextJobID} setNextID={setNextJobID} currentJobs={allJobs} updateJobs={setAllJobs}/>
+
         <div className="grid gap-6">
           {filteredJobs.length > 0 ? (
             filteredJobs.map((job, index) => (
