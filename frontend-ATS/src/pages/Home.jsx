@@ -17,7 +17,7 @@ document.body.style.backgroundColor = " #000000";
 const Home = () => {
 
   const [loading, setLoading] = useState(false)
-  const [scrapedData, setScrapedData] = useState(null); // State for backend data new
+  // const [scrapedData, setScrapedData] = useState(null); // State for backend data new
   const navigate = useNavigate(); // Use navigate hook for routing new
   
   const var_jobRoles = useSelector((state) => state.input.jobRoles);
@@ -59,26 +59,34 @@ const Home = () => {
     setModalState({ ...modalState, isVisible: false });
   };
 
+  // NEW: User ID (replace with actual authentication later)
+  const [userId, setUserId] = useState(123); // Static user ID for now
+
+ 
 
   // Webscraper begin
+
   const handleSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
   
     if (!Array.isArray(jobRoles) || !Array.isArray(locations)) {
       console.error('Invalid input data');
+      setLoading(false);
       return;
     }
   
     const mergedData = {
       jobRoles: jobRoles,
       locations: locations,
+      user_id: userId,
     };
   
-    console.log("Sending data:", mergedData);  
+    console.log("Sending data:", mergedData);
   
     try {
-      const response = await fetch("http://127.0.0.1:8000/load_inputs", {
+      // Step 1: Submit the form data to /load_inputs
+      const submitResponse = await fetch("http://127.0.0.1:8000/load_inputs", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -86,36 +94,134 @@ const Home = () => {
         body: JSON.stringify(mergedData),
       });
   
-      if (!response.ok) {
-        throw new Error('Failed to submit data');
+      if (!submitResponse.ok) {
+        throw new Error("Failed to submit data");
       }
   
-      const data = await response.json();
-      console.log("Success:", data);
+      console.log("Form data submitted successfully.");
+  
+      // Step 2: Trigger scraping immediately after submission
+      const scrapeResponse = await fetch("http://127.0.0.1:8000/scrape_and_get_details");
+  
+      if (!scrapeResponse.ok) {
+        throw new Error("Failed to fetch scraping details");
+      }
+  
+      const scrapeData = await scrapeResponse.json();
+      console.log("Scraping Success:", scrapeData);
+  
+      // Navigate to results with scraped data
+      navigate("/results", { state: { data: scrapeData.data } });
+  
     } catch (error) {
       console.error("Error in handleSubmit:", error);
+    } finally {
+      setLoading(false);
     }
-
-
-    try{
-        const getResponse = await fetch("http://127.0.0.1:8000/scrape_and_get_details");
-
-        if (!getResponse.ok) {
-          throw new Error("Failed to fetch scraping details");
-        }
-
-        const getData = await getResponse.json();
-        //console.log("GET Success:", getData); 
-        setScrapedData(getData); // Store data in state new
-        setLoading(false); //new
-        navigate("/results", { state: { data:getData.data } }); // Navigate to results page new
-
-        // Optionally handle `getData` for UI updates
-      } catch (error) {
-        console.error("Error in handleSubmit:", error);
-        setLoading(false); //new
-      }
   };
+  
+  
+  // const handleSubmit = async (e) => {
+  //   setLoading(true);
+  //   e.preventDefault();
+  
+  //   if (!Array.isArray(jobRoles) || !Array.isArray(locations)) {
+  //     console.error('Invalid input data');
+  //     return;
+  //   }
+  
+  //   const mergedData = {
+  //     jobRoles: jobRoles,
+  //     locations: locations,
+  //     user_id: userId 
+  //   };
+  
+  //   console.log("Sending data:", mergedData);  
+  
+  //   try {
+  //     const response = await fetch("http://127.0.0.1:8000/load_inputs", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(mergedData),
+  //     });
+  
+  //     if (!response.ok) {
+  //       throw new Error('Failed to submit data');
+  //     }
+  
+  //     const data = await response.json();
+  //     console.log("Success:", data);
+  //   } catch (error) {
+  //     console.error("Error in handleSubmit:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+
+  // const handleSeeResults = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await fetch(`http://127.0.0.1:8000/get_scraped_data/${userId}`);
+
+  //     if (!response.ok) {
+  //       // If no data is found for the user, attempt to scrape
+  //       if (response.status === 404) {
+  //         console.log("No cached data found.");
+  // //         const scrapeResponse = await fetch("http://127.0.0.1:8000/scrape_and_get_details");
+
+  // //         if (!scrapeResponse.ok) {
+  // //           throw new Error("Failed to fetch scraping details");
+  // //         }
+
+  // //         const scrapeData = await scrapeResponse.json();
+  // //         console.log("GET Success:", scrapeData);
+  // //         navigate("/results", { state: { data: scrapeData.data } });
+
+  // //       } else {
+  // //         throw new Error("Failed to fetch scraping details");
+  // //       }
+
+  //     } else {
+  //       const getData = await response.json();
+  //       console.log("GET Success:", getData);
+  //       navigate("/results", { state: { data: getData } });
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching scraped data:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const handleSeeResults = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/get_scraped_data/${userId}`);
+  
+      if (!response.ok) {
+        // If no cached data is found, log a message and stop further execution
+        if (response.status === 404) {
+          console.log("No cached data found.");
+        } else {
+          throw new Error("Failed to fetch scraped data");
+        }
+      } else {
+        // If cached data is found, navigate to the results page
+        const getData = await response.json();
+        console.log("GET Success:", getData);
+        navigate("/results", { state: { data: getData } });
+      }
+    } catch (error) {
+      console.error("Error fetching scraped data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+
 
   return (
     loading ? <Processing /> :
@@ -174,6 +280,7 @@ const Home = () => {
 
     <div className="w-4/5 max-w-lg mx-auto">
       <button className="btn ml-0 sm:ml-12" onClick={handleSubmit}>Submit to Proceed</button>
+      <button className="btn ml-0 sm:ml-12" onClick={handleSeeResults}>See Scraped Results</button>
     </div>
 
     <Modal modalState={modalState} isVisible={modalState.isVisible} onClose={closeModal} refresh={triggerRefresh}/>
