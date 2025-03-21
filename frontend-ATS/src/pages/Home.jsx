@@ -18,6 +18,8 @@ const Home = () => {
 
   const [loading, setLoading] = useState(false)
   const [token, setToken] = useState(localStorage.getItem("token") || "");
+  const [hasScrapedData, setHasScrapedData] = useState(false);
+  const [scrapeMessage, setScrapeMessage] = useState("");
   // const [scrapedData, setScrapedData] = useState(null); // State for backend data new
   const navigate = useNavigate(); // Use navigate hook for routing new
   
@@ -63,6 +65,40 @@ const Home = () => {
   };
 
   useEffect(() => {
+    const checkScrapedData = async () => {
+      if (!username) return;
+
+      const userIdMap = { "user1": 1, "user2": 2 };
+      const user_id = userIdMap[username] || 1;
+
+      try {
+        if (!token) await handleLogin();
+
+        const response = await fetch(`http://127.0.0.1:8000/get_scraped_data/${user_id}`, {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          setHasScrapedData(true); // Data exists in Redis
+          setScrapeMessage("You have successfully scraped data!");
+        } else if (response.status === 404) {
+          setHasScrapedData(false); // No data in Redis
+          setScrapeMessage("");
+        }
+      } catch (error) {
+        console.error("Error checking scraped data:", error);
+        setHasScrapedData(false);
+        setScrapeMessage("");
+      }
+    };
+
+    checkScrapedData();
+  }, [username, token]);
+
+  useEffect(() => {
     if (!username) {
       navigate("/home");
     }
@@ -96,6 +132,7 @@ const Home = () => {
   const handleSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
+    setScrapeMessage("");
   
     if (!Array.isArray(jobRoles) || !Array.isArray(locations)) {
       console.error('Invalid input data');
@@ -178,7 +215,12 @@ const Home = () => {
     if (!scrapeResponse.ok) throw new Error("Failed to fetch scraping details");
 
     const scrapeData = await scrapeResponse.json();
-    navigate("/results", { state: { data: scrapeData.data } });
+    setHasScrapedData(true);
+    setScrapeMessage("You have successfully scraped data!");
+    setTimeout(() => {
+      navigate("/results", { state: { data: scrapeData.data } });
+    }, 2000);
+    
   } catch (error) {
     console.error("Error in handleSubmit:", error);
     if (error.message.includes("401")) await handleLogin(); // Retry login on auth failure
@@ -205,6 +247,8 @@ const handleSeeResults = async () => {
     if (!response.ok) {
       if (response.status === 404) {
         console.log("No cached data found.");
+        setHasScrapedData(false);
+        setScrapeMessage("");
       } else {
         throw new Error("Failed to fetch scraped data");
       }
@@ -294,7 +338,7 @@ return loading ? (
 ) : (
   <div className="flex flex-col pb-10">
     <Header />
-    <div className="p-10 self-center">
+    <div className="p-5 self-center">
       <h1 className="text-white font-bold text-left text-[36px]">
         Welcome to the DreamShift Job Search Tool Test
       </h1>
@@ -302,6 +346,27 @@ return loading ? (
         Provide the required details to perform the job search
       </h1>
     </div>
+
+    <div className="w-full max-w-4xl mx-auto flex justify-end mb-4 px-5">
+      <div className="flex flex-col items-end gap-2">
+        {scrapeMessage && (
+          <p
+            className={`text-sm text-center p-2 rounded-lg font-semibold ${
+              scrapeMessage.startsWith("Error")
+                ? "text-white bg-red-900"
+                : "text-white bg-blue-900"
+            }`}
+          >
+            {scrapeMessage}
+          </p>
+        )}
+        {hasScrapedData && (
+          <button className="btn" onClick={handleSeeResults}>
+            See Scraped Results
+          </button>
+        )}
+      </div>
+      </div>
 
     <div className="w-[100%] max-w-lg mx-auto mb-[30px]">
       <form className="w-4/5 max-w-lg mx-auto text-left flex flex-col gap-6">
@@ -336,14 +401,11 @@ return loading ? (
       </form>
     </div>
 
-    <div className="w-4/5 max-w-lg mx-auto">
-      <button className="btn ml-0 sm:ml-12" onClick={handleSubmit}>
-        Submit to Proceed
-      </button>
-      <button className="btn ml-0 sm:ml-12" onClick={handleSeeResults}>
-        See Scraped Results
-      </button>
-    </div>
+    <div className="w-4/5 max-w-lg mx-auto flex justify-center">
+        <button className="btn" onClick={handleSubmit}>
+          Submit to Proceed
+        </button>
+      </div>
 
     <Modal
       modalState={modalState}
