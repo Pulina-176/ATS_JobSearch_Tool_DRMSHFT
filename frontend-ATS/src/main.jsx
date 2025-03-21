@@ -8,11 +8,11 @@ import App from './App.jsx'
 import './index.css'
 
 createRoot(document.getElementById('root')).render(
-  <BrowserRouter>
+  
     <Provider store={store}>
       <PersistGate persistor={persistor} loading={null}>
         <App />
       </PersistGate>
     </Provider>
-  </BrowserRouter>,
+  
 )

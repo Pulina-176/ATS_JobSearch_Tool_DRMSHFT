@@ -9,19 +9,23 @@ import Results from "./pages/Results";
 import Display from "./pages/Display";
 import ATS from "./pages/ATS";
 import ATS_Edit from './pages/ATS-edit';
+import ProRoutes from './UI-components/ProRoutes';
 
 
 export default function App() {
   return (
+    <Router>
     <Routes>
-      <Route path="/" element={<Login/>} />
-      <Route path="/home" element={<Home/>} />
-      <Route path="/preview" element={<PdfPreview/>} />
-      <Route path="/results" element={<Results />} />
-      <Route path="/display" element={<Display />} />
-      <Route path="/ats-preview" element={<ATS />} />
-      <Route path="/ats-edit" element={<ATS_Edit />} />
-      
+      <Route path="/" element={<Login />} />
+      <Route element={<ProRoutes />}>
+        <Route path="/home" element={<Home />} />
+        <Route path="/preview" element={<PdfPreview />} />
+        <Route path="/results" element={<Results />} />
+        <Route path="/display" element={<Display />} />
+        <Route path="/ats-preview" element={<ATS />} />
+        <Route path="/ats-edit" element={<ATS_Edit />} />
+      </Route>
     </Routes>
+  </Router>
   )
 }

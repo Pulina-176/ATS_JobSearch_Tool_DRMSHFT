@@ -205,7 +205,13 @@ const Home = () => {
       body: JSON.stringify(mergedData),
     });
 
-    if (!submitResponse.ok) throw new Error("Failed to submit data");
+    if (!submitResponse.ok){
+      if (submitResponse.status === 401) {
+        navigate("/"); // Redirect to login on unauthorized
+        return;
+      }
+      throw new Error("Failed to submit data");
+    }
 
     const scrapeResponse = await fetch("http://127.0.0.1:8000/scrape_and_get_details", {
       method: "GET",
@@ -214,7 +220,13 @@ const Home = () => {
       },
     });
 
-    if (!scrapeResponse.ok) throw new Error("Failed to fetch scraping details");
+    if (!scrapeResponse.ok){
+      if (scrapeResponse.status === 401) {
+        navigate("/"); // Redirect to login on unauthorized
+        return;
+      }
+      throw new Error("Failed to fetch scraping details");
+    }
 
     const scrapeData = await scrapeResponse.json();
     setHasScrapedData(true);
