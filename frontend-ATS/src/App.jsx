@@ -2,6 +2,7 @@ import React from 'react';
 import {Routes, Route, Navigate} from 'react-router-dom';
 import { BrowserRouter as Router} from "react-router-dom";
 
+import Login from './pages/Login';
 import Home from './pages/Home';
 import PdfPreview from './pages/PdfPreview';
 import Results from "./pages/Results";
@@ -14,7 +15,8 @@ import PdfUploader from './pages/CVwriting/PdfUploader';
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<Home/>} />
+      <Route path="/" element={<Login/>} />
+      <Route path="/home" element={<Home/>} />
       <Route path="/preview" element={<PdfPreview/>} />
       <Route path="/results" element={<Results />} />
       <Route path="/display" element={<Display />} />
