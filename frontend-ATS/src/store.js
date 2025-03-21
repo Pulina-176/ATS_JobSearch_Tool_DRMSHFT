@@ -2,9 +2,10 @@ import {combineReducers, configureStore} from "@reduxjs/toolkit";
 import {persistReducer, persistStore} from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import inputReducer from "./slices/inputSlice.js"
+import authReducer from "./slices/authSlice";
 import atsDataReducer from "./slices/atsDataSlice.js"
 
-const rootReducer = combineReducers({input: inputReducer, atsData: atsDataReducer})
+const rootReducer = combineReducers({input: inputReducer, auth: authReducer, atsData: atsDataReducer})
 
 const persistConfig = {
     key: "root",
