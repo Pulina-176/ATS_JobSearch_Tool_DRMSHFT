@@ -1,5 +1,6 @@
 // form to add a job manually
 import React, { useState } from 'react'
+import { useSelector } from "react-redux";
 
 // props passed:
 // visible - modal is open or not
@@ -21,19 +22,46 @@ const AddJob = ({visible, closeModal, id, setNextID, currentJobs, updateJobs}) =
         other_info: ''
     })
 
+    const { token } = useSelector((state) => state.auth);
+
     const handleChange = (e) => {
         const {name, value} = e.target;
         setFormData({...formData, [name]: value});
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const newJob = formData;
+
+        console.log("Request body being sent:", JSON.stringify(newJob));
+
+        try {
+            // Send the manual job to the backend
+            const response = await fetch("http://localhost:8000/add_manual_job", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+              },
+              body: JSON.stringify(newJob),
+            });
+      
+            if (!response.ok) {
+              const errorText = await response.text();
+              throw new Error(`Failed to add manual job: ${response.statusText}`);
+            }
+      
+            const data = await response.json();
+            console.log("Manual job added to backend:", data);
+
         const newJobs = [...currentJobs, newJob];
         updateJobs(newJobs);
         setNextID(id + 1);
         closeModal();
+    }catch (error) {
+      console.error("Error adding manual job:", error);
     }
+  };
 
     return (
         <div>
@@ -111,7 +139,7 @@ const AddJob = ({visible, closeModal, id, setNextID, currentJobs, updateJobs}) =
                         </div>
                         <div className='flex justify-end'>
                         <button type='button' onClick={closeModal} className='mr-2 p-2 bg-gray-500 text-white rounded'>Cancel</button>
-                        <button type='button' onClick={handleSubmit} className='p-2 bg-blue-500 text-white rounded'>Submit</button>
+                        <button type='submit' onClick={handleSubmit} className='p-2 bg-blue-500 text-white rounded'>Submit</button>
                         </div>
                     </form>
                 </div>
