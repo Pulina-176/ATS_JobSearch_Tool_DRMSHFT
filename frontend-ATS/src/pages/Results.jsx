@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate} from "react-router-dom";
 import { useSelector , useDispatch } from "react-redux";
 import { getKeyByValue } from "../utils/simple_functions";
-import { addJob , clearJobs } from "../slices/atsDataSlice";
+import { addJob , clearJobs} from "../slices/atsDataSlice";
 
 import Filters from "../UI-components/Filters";
 import JobDescription from "../UI-components/JobDescription";
