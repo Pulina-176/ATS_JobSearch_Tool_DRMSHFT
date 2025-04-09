@@ -11,8 +11,8 @@ import { useSelector } from "react-redux";
 // updateJobs - function to update the allJobs array state in parent component (Results.jsx)
 const AddJob = ({visible, closeModal, id, setNextID, currentJobs, updateJobs}) => {
 
-    const [formData, setFormData] = useState({
-        link_no: id,
+    const [formData, setFormData] = useState({ // initial state of the form
+        link_no: 0,
         title: '',
         company: '',
         location: '',
@@ -31,7 +31,13 @@ const AddJob = ({visible, closeModal, id, setNextID, currentJobs, updateJobs}) =
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const newJob = formData;
+
+        let newJob = formData;
+
+        newJob = {
+            ...formData,
+            link_no: id, // ensure updated value here
+          };
 
         console.log("Request body being sent:", JSON.stringify(newJob));
 
