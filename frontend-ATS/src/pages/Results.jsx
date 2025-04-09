@@ -4,10 +4,13 @@ import { useSelector , useDispatch } from "react-redux";
 import { getKeyByValue } from "../utils/simple_functions";
 import { addJob , clearJobs} from "../slices/atsDataSlice";
 
+import { TrashIcon } from '@heroicons/react/24/outline';
+
 import Filters from "../UI-components/Filters";
 import JobDescription from "../UI-components/JobDescription";
 import CustomLoading from "../UI-components/CustomLoading";
 import AddJob from "../UI-components/AddJob";
+import DeleteJobModal from "../UI-components/DeleteJob";
 
 const Results = () => {
 
@@ -147,7 +150,7 @@ const Results = () => {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
+  const closeModal = () => { // Close the modal with the job description
     setIsModalOpen(false); // Close the modal
     setSelectedJob(null); // Clear the selected job description
     setSelectedJobTitle(null); // Clear the selected job title
@@ -166,6 +169,15 @@ const Results = () => {
     setIsGenerating(false);
     navigate("/display", { state: { selectedJobs } }); // Navigate to the selected jobs page
   };
+
+  // State management for the Delete Job Modal
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [jobToDelete, setJobToDelete] = useState(null); // State for the job id to be deleted
+  const openDeleteModal = (jobID) => {
+    setJobToDelete(jobID);
+    setIsDeleteModalOpen(true);
+  };
+  const closeDeleteModal = () => setIsDeleteModalOpen(false);
 
   // State management for the Add Job Modal
   const [isOpened, setIsOpened] = useState(false);
@@ -234,26 +246,44 @@ const Results = () => {
                     onChange={() => handleCheckboxChange(job)}
                   />
                 </label>
-              <div key={index} className="p-4 rounded-lg bg-gray-800 shadow-md cursor-pointer flex-1 min-h-[100px] w-full" 
-                               onClick={() => {
-                                            setSelectedJobID(job.link_no) // to get a unique ID for each job. Added as an extension for handleJobClick
-                                            handleJobClick(job)
-                                          }}
-                               >
-                <h2 className="text-xl font-semibold">{job.title}</h2>
-                <p className="text-sm">Company: {job.company}</p>
-                <p className="text-sm">Location: {job.location}</p>
-                <p className="text-sm">Source: {job.source}</p>
-                <a
-                  href={job.apply_link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-400 underline"
-                >
-                  Apply Link
-                </a>
+
+                <div key={index} className="p-4 rounded-lg bg-gray-800 shadow-md flex-1 min-h-[100px] w-full">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold">{job.title}</h2>
+                    <button
+                      onClick={() => openDeleteModal(job.link_no)}
+                      className="text-red-500 hover:text-red-700"
+                      title="Delete"
+                    >
+                      <TrashIcon className="h-5 w-5 cursor-pointer" />
+                    </button>
+                  </div>
+                  <p className="text-sm">Company: {job.company}</p>
+                  <p className="text-sm">Location: {job.location}</p>
+                  <p className="text-sm">Source: {job.source}</p>
+
+                  <div className="flex items-center justify-between">  
+                    <a
+                      href={job.apply_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-400 underline cursor-pointer"
+                    >
+                      Apply Link
+                    </a>
+                    <p
+                      className="text-blue-400 underline cursor-pointer"
+                      onClick={() => {
+                        setSelectedJobID(job.link_no) // to get a unique ID for each job. Added as an extension for handleJobClick
+                        handleJobClick(job)
+                      }}
+                    >
+                      See Description...
+                    </p>
+                  </div>
+
                 </div>
-              
+
               </div>
             ))
           ) : (
@@ -272,6 +302,10 @@ const Results = () => {
       {/* Job Description Modal */}
       {isModalOpen && (
         <JobDescription description={selectedJob} onClose={closeModal} title={getKeyByValue(jobTitleDict, selectedJobTitle)} raw_title={selectedJobTitle} id={selectedJobID}/>
+      )}
+      {/* Delete Job Modal */}
+      {isDeleteModalOpen && (
+        <DeleteJobModal handleClose={closeDeleteModal} jobID={jobToDelete} currentJobs={allJobs} updateJobs={setAllJobs}/>
       )}
     </div>
   );
