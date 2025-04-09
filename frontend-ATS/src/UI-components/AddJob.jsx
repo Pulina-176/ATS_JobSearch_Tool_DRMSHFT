@@ -11,6 +11,8 @@ import { useSelector } from "react-redux";
 // updateJobs - function to update the allJobs array state in parent component (Results.jsx)
 const AddJob = ({visible, closeModal, id, setNextID, currentJobs, updateJobs}) => {
 
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; // backend URL from .env file
+
     const [formData, setFormData] = useState({ // initial state of the form
         link_no: 0,
         title: '',
@@ -43,7 +45,7 @@ const AddJob = ({visible, closeModal, id, setNextID, currentJobs, updateJobs}) =
 
         try {
             // Send the manual job to the backend
-            const response = await fetch("http://localhost:8000/add_manual_job", {
+            const response = await fetch(`${BACKEND_URL}/add_manual_job`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",

@@ -8,13 +8,15 @@ import { useSelector } from "react-redux";
 // updateJobs - function to update the allJobs array state in parent component (Results.jsx)
 const DeleteJobModal = ({ handleClose, jobID, currentJobs, updateJobs }) => {
 
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; // backend URL from .env file
+
     const { token } = useSelector((state) => state.auth);
 
     const handleDelete = async () => {
         console.log("Deleting job with ID:", jobID);
         try {
             // Delete the selected Job
-            const response = await fetch(`http://localhost:8000/delete_manual_job/${jobID}`, {
+            const response = await fetch(`${BACKEND_URL}/delete_manual_job/${jobID}`, {
               method: "DELETE",
               headers: {
                 "Content-Type": "application/json",

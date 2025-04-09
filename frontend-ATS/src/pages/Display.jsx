@@ -7,6 +7,9 @@ import CustomLoading from "../UI-components/CustomLoading";
 
 
 const Display = () => {
+
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; // backend URL from .env file
+
   const [isProcessing, setIsProcessing] = useState(false);
 
   const location = useLocation();
@@ -43,7 +46,7 @@ const Display = () => {
     console.log("Sending data:", { title, descriptions });  
     
     try{
-      const response = await fetch("http://127.0.0.1:8000/ats_test", {
+      const response = await fetch(`${BACKEND_URL}/ats_test`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
