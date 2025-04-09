@@ -76,7 +76,7 @@ const Home = () => {
       try {
         if (!token) await handleLogin();
 
-        const response = await fetch(`http://127.0.0.1:8000/get_scraped_data/${user_id}`, {
+        const response = await fetch(`${BACKEND_URL}/get_scraped_data/${user_id}`, {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${token}`,
@@ -113,7 +113,7 @@ const Home = () => {
   const handleLogin = async () => {
     try {
       const password = username === "user1" ? "password1" : "password2"; // Replace with real password logic
-      const response = await fetch("http://127.0.0.1:8000/login", {
+      const response = await fetch(`${BACKEND_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -196,7 +196,7 @@ const Home = () => {
   try {
     if (!token) await handleLogin(); // Ensure token is available
 
-    const submitResponse = await fetch("http://127.0.0.1:8000/load_inputs", {
+    const submitResponse = await fetch(`${BACKEND_URL}/load_inputs`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -213,7 +213,7 @@ const Home = () => {
       throw new Error("Failed to submit data");
     }
 
-    const scrapeResponse = await fetch("http://127.0.0.1:8000/scrape_and_get_details", {
+    const scrapeResponse = await fetch(`${BACKEND_URL}/scrape_and_get_details`, {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`,
@@ -251,7 +251,7 @@ const handleSeeResults = async () => {
 
     if (!token) await handleLogin(); // Ensure token is available
 
-    const response = await fetch(`http://127.0.0.1:8000/get_scraped_data/${user_id}`, {
+    const response = await fetch(`${BACKEND_URL}/get_scraped_data/${user_id}`, {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`,
