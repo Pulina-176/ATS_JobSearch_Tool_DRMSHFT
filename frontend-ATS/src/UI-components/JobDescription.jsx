@@ -49,7 +49,7 @@ const JobDescription = ({ description, onClose, title, raw_title, id }) => {
     }
     
     try {
-      const response = await fetch(`${BACKEND_URL}/job_description_ai`, {
+      const response = await fetch(`${BACKEND_URL}/ai_gemini/job_description_ai`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

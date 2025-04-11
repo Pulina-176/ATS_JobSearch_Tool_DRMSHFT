@@ -4,6 +4,9 @@ import { useDispatch } from "react-redux";
 import { settUsername, setToken } from "../slices/authSlice"; // Import setToken
 
 const Login = () => {
+
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -20,7 +23,7 @@ const Login = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:8000/login", {
+      const response = await fetch(`${BACKEND_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -76,7 +76,7 @@ const Home = () => {
       try {
         if (!token) await handleLogin();
 
-        const response = await fetch(`${BACKEND_URL}/get_scraped_data/${user_id}`, {
+        const response = await fetch(`${BACKEND_URL}/scraper/get_scraped_data/${user_id}`, {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${token}`,
@@ -196,7 +196,7 @@ const Home = () => {
   try {
     if (!token) await handleLogin(); // Ensure token is available
 
-    const submitResponse = await fetch(`${BACKEND_URL}/load_inputs`, {
+    const submitResponse = await fetch(`${BACKEND_URL}/scraper/load_inputs`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -213,7 +213,7 @@ const Home = () => {
       throw new Error("Failed to submit data");
     }
 
-    const scrapeResponse = await fetch(`${BACKEND_URL}/scrape_and_get_details`, {
+    const scrapeResponse = await fetch(`${BACKEND_URL}/scraper/scrape_jobs`, {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`,
@@ -251,7 +251,7 @@ const handleSeeResults = async () => {
 
     if (!token) await handleLogin(); // Ensure token is available
 
-    const response = await fetch(`${BACKEND_URL}/get_scraped_data/${user_id}`, {
+    const response = await fetch(`${BACKEND_URL}/scraper/get_scraped_data/${user_id}`, {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`,
@@ -271,6 +271,7 @@ const handleSeeResults = async () => {
     }
 
     const getData = await response.json();
+    console.log(getData.job_details)
     navigate("/results", { state: { data: getData.job_details } });
   } catch (error) {
     console.error("Error fetching scraped data:", error);

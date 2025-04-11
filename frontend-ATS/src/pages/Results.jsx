@@ -48,7 +48,7 @@ const Results = () => {
     }
     
     try {
-      const response = await fetch(`${BACKEND_URL}/job_description_ai`, {
+      const response = await fetch(`${BACKEND_URL}/ai_gemini/job_description_ai`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -117,7 +117,7 @@ const Results = () => {
     const jobTitleList = allJobs.map((job) => job.title);
     console.log("jobTitleList: ", jobTitleList);
     try {
-      const response = await fetch(`${BACKEND_URL}/job_titles_ai`, {  // fetch job titles from gemini
+      const response = await fetch(`${BACKEND_URL}/ai_gemini/job_titles_ai`, {  // fetch job titles from gemini
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -16,7 +16,7 @@ const DeleteJobModal = ({ handleClose, jobID, currentJobs, updateJobs }) => {
         console.log("Deleting job with ID:", jobID);
         try {
             // Delete the selected Job
-            const response = await fetch(`${BACKEND_URL}/delete_manual_job/${jobID}`, {
+            const response = await fetch(`${BACKEND_URL}/jobs/delete_manual_job/${jobID}`, {
               method: "DELETE",
               headers: {
                 "Content-Type": "application/json",
