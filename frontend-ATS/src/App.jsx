@@ -10,6 +10,8 @@ import Display from "./pages/Display";
 import ATS from "./pages/ATS";
 import ATS_Edit from './pages/ATS-edit';
 import ProRoutes from './UI-components/ProRoutes';
+import PdfUploader from './pages/CVwriting/PdfUploader';
+
 
 
 export default function App() {
@@ -24,6 +26,8 @@ export default function App() {
         <Route path="/display" element={<Display />} />
         <Route path="/ats-preview" element={<ATS />} />
         <Route path="/ats-edit" element={<ATS_Edit />} />
+        <Route path="/cv-writing/pdf-uploader" element={<PdfUploader/>} />
+
       </Route>
     </Routes>
   </Router>
