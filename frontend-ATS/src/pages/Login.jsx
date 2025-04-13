@@ -15,6 +15,7 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const handleLogin = async (e) => {
+    console.log(BACKEND_URL);
     e.preventDefault();
 
     if (!username || !password) {
@@ -33,6 +34,7 @@ const Login = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
+        console.log(errorData);
         throw new Error("Invalid credentials");
       }
 
