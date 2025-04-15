@@ -11,7 +11,7 @@ import ATS from "./pages/ATS";
 import ATS_Edit from './pages/ATS-edit';
 import ProRoutes from './UI-components/ProRoutes';
 import PdfUploader from './pages/CVwriting/PdfUploader';
-
+import ResumeData from './pages/CVwriting/ResumeData';
 
 
 export default function App() {
@@ -27,7 +27,7 @@ export default function App() {
         <Route path="/ats-preview" element={<ATS />} />
         <Route path="/ats-edit" element={<ATS_Edit />} />
         <Route path="/cv-writing/pdf-uploader" element={<PdfUploader/>} />
-
+        <Route path="/cv-writing/resume-data" element={<ResumeData/>} />
       </Route>
     </Routes>
   </Router>
