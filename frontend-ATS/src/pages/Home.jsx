@@ -213,7 +213,10 @@ const Home = () => {
       throw new Error("Failed to submit data");
     }
 
-    const scrapeResponse = await fetch(`${BACKEND_URL}/scraper/scrape_jobs`, {
+    const userIdMap = { "user1": 1, "user2": 2 }; // This has to be replaced with proper db mapping or calling
+    const user_id = userIdMap[username] || 1;     // only for development stage
+
+    const scrapeResponse = await fetch(`${BACKEND_URL}/scraper/scrape_jobs_async/${user_id}`, {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`,
