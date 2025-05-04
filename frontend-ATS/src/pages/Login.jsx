@@ -4,6 +4,9 @@ import { useDispatch } from "react-redux";
 import { settUsername, setToken } from "../slices/authSlice"; // Import setToken
 
 const Login = () => {
+
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -12,6 +15,7 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const handleLogin = async (e) => {
+    console.log(BACKEND_URL);
     e.preventDefault();
 
     if (!username || !password) {
@@ -20,7 +24,7 @@ const Login = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:8000/login", {
+      const response = await fetch(`${BACKEND_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -30,6 +34,7 @@ const Login = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
+        console.log(errorData);
         throw new Error("Invalid credentials");
       }
 

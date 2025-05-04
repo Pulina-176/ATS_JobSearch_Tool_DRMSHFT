@@ -45,7 +45,7 @@ const AddJob = ({visible, closeModal, id, setNextID, currentJobs, updateJobs}) =
 
         try {
             // Send the manual job to the backend
-            const response = await fetch(`${BACKEND_URL}/add_manual_job`, {
+            const response = await fetch(`${BACKEND_URL}/jobs/add_manual_job`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",

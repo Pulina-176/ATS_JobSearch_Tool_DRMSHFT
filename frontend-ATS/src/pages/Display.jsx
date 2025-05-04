@@ -46,7 +46,7 @@ const Display = () => {
     console.log("Sending data:", { title, descriptions });  
     
     try{
-      const response = await fetch(`${BACKEND_URL}/ats_test`, {
+      const response = await fetch(`${BACKEND_URL}/ai_gemini/ats_keywords`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
