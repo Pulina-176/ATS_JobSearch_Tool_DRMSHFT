@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { settUsername, setToken, clearAuth } from "../slices/authSlice";
+import { settUsername, setToken, clearAuth, setUserId } from "../slices/authSlice";
 
 const Login = () => {
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -41,6 +41,7 @@ const Login = () => {
       const data = await response.json();
       dispatch(settUsername(username));
       dispatch(setToken(data.token));
+      dispatch(setUserId(data.user_id));
       setSuccessMessage(data.message);
       navigate("/home");
     } catch (error) {

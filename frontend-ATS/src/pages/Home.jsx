@@ -70,8 +70,9 @@ const Home = () => {
     const checkScrapedData = async () => {
       if (!username || !token) return;
   
-      const userIdMap = { "user1": 1, "user2": 2 }; // Replace with proper DB mapping
-      const user_id = userIdMap[username] || 1;
+      // const userIdMap = { "user1": 1, "user2": 2 }; // Replace with proper DB mapping
+      // const user_id = userIdMap[username] || 1;
+      const user_id = useSelector((state) => state.auth.userId);
   
       try {
         const response = await fetch(`${BACKEND_URL}/scraper/get_scraped_data/${user_id}`, {
@@ -121,8 +122,9 @@ const Home = () => {
       return;
     }
   
-    const userIdMap = { "user1": 1, "user2": 2 }; // Replace with proper DB mapping
-    const user_id = userIdMap[username] || 1;
+    // const userIdMap = { "user1": 1, "user2": 2 }; // Replace with proper DB mapping
+    // const user_id = userIdMap[username] || 1;
+    const user_id = useSelector((state) => state.auth.userId);
     const mergedData = { jobRoles, locations, user_id };
   
     try {
@@ -175,8 +177,9 @@ const Home = () => {
   const handleSeeResults = async () => {
     setLoading(true);
     try {
-      const userIdMap = { "user1": 1, "user2": 2 }; // Replace with proper DB mapping
-      const user_id = userIdMap[username] || 1;
+      // const userIdMap = { "user1": 1, "user2": 2 }; // Replace with proper DB mapping
+      // const user_id = userIdMap[username] || 1;
+      const user_id = useSelector((state) => state.auth.userId);
   
       const response = await fetch(`${BACKEND_URL}/scraper/get_scraped_data/${user_id}`, {
         method: "GET",
