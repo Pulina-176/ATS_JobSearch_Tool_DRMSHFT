@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { settUsername, setToken, clearAuth, setUserId } from "../slices/authSlice";
+import { settUsername, setToken } from "../slices/authSlice"; // Import setToken
 
 const Login = () => {
+
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -12,20 +14,16 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Clear auth state on component mount
-  useEffect(() => {
-    dispatch(clearAuth()); // Clear Redux and localStorage
-  }, [dispatch]);
-
   const handleLogin = async (e) => {
+    console.log(BACKEND_URL);
     e.preventDefault();
+
     if (!username || !password) {
       setError("Username and password are required");
       return;
     }
+
     try {
-      // Clear existing auth state before new login
-      dispatch(clearAuth());
       const response = await fetch(`${BACKEND_URL}/auth/login`, {
         method: "POST",
         headers: {
@@ -33,19 +31,20 @@ const Login = () => {
         },
         body: JSON.stringify({ username, password }),
       });
+
       if (!response.ok) {
         const errorData = await response.json();
-        setError(errorData.detail || "Invalid username or password");
-        return;
+        console.log(errorData);
+        throw new Error("Invalid credentials");
       }
+
       const data = await response.json();
-      dispatch(settUsername(username));
-      dispatch(setToken(data.token));
-      dispatch(setUserId(data.user_id));
+      dispatch(settUsername(username)); // Store username in Redux
+      dispatch(setToken(data.token));  // Store token in Redux
       setSuccessMessage(data.message);
       navigate("/home");
     } catch (error) {
-      setError("An error occurred. Please try again.");
+      setError(error.message);
       setSuccessMessage("");
     }
   };
@@ -59,6 +58,7 @@ const Login = () => {
     }
   }, [successMessage, navigate]);
 
+  // Rest of the component remains unchanged
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-200 p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 transform transition-all hover:scale-105 duration-300">

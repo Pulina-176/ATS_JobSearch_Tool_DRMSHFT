@@ -105,7 +105,7 @@ const Display = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-10">
+    <div className="min-h-screen bg-black text-white p-10">
       <h1 className="text-2xl font-bold mb-5">Selected Jobs</h1>
       <div className="grid gap-6">
         {selectedJobs.length > 0 ? (
@@ -115,7 +115,6 @@ const Display = () => {
               <p className="text-sm">Company: {job.company}</p>
               <p className="text-sm">Location: {job.location}</p>
               <p className="text-sm">Source: {job.source}</p>
-              <p className="text-sm text-gray-300">{job.other_info.length > 0 ? job.other_info.join(" ➖ ") : "No additional info"}</p>
               <a
                 href={job.apply_link}
                 target="_blank"
