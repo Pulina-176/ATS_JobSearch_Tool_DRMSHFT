@@ -29,6 +29,7 @@ const Home = () => {
   const var_companies = useSelector((state) => state.input.companies);
   const var_locations = useSelector((state) => state.input.locations);
   const var_fields = useSelector((state) => state.input.fields);
+  const user_id = useSelector((state) => state.auth.userId);
 
   const [companies, setCompanies] = useState(var_companies);
   const [jobRoles, setJobRoles] = useState(var_jobRoles);
@@ -72,7 +73,7 @@ const Home = () => {
   
       // const userIdMap = { "user1": 1, "user2": 2 }; // Replace with proper DB mapping
       // const user_id = userIdMap[username] || 1;
-      const user_id = useSelector((state) => state.auth.userId);
+      
   
       try {
         const response = await fetch(`${BACKEND_URL}/scraper/get_scraped_data/${user_id}`, {
@@ -124,7 +125,7 @@ const Home = () => {
   
     // const userIdMap = { "user1": 1, "user2": 2 }; // Replace with proper DB mapping
     // const user_id = userIdMap[username] || 1;
-    const user_id = useSelector((state) => state.auth.userId);
+    
     const mergedData = { jobRoles, locations, user_id };
   
     try {
@@ -179,7 +180,7 @@ const Home = () => {
     try {
       // const userIdMap = { "user1": 1, "user2": 2 }; // Replace with proper DB mapping
       // const user_id = userIdMap[username] || 1;
-      const user_id = useSelector((state) => state.auth.userId);
+     
   
       const response = await fetch(`${BACKEND_URL}/scraper/get_scraped_data/${user_id}`, {
         method: "GET",
