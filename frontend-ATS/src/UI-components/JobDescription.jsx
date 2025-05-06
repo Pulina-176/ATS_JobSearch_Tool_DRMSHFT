@@ -121,11 +121,11 @@ const JobDescription = ({ description, onClose, title, raw_title, id }) => {
       <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm" onClick={onClose}></div>
 
       {/* Modal Content */}
-      <div className="bg-gray-800 rounded-lg p-6 max-w-2xl w-full mx-4 relative z-50 max-h-[80vh] overflow-y-auto">
+      <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 relative z-50 max-h-[80vh] overflow-y-auto">
         <h3 className="text-lg font-bold mb-4">Job Description</h3>
         <ShowDescriptionFROMJSON JSONFormat={formattedDescription}/>
         <button
-          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className="mt-4 bg-black text-white px-4 py-2 rounded hover:bg-gray-500"
           onClick={onClose}
         >
           Close
@@ -183,7 +183,7 @@ const ShowDescriptionFROMJSON = (JSONFormat) => {
 
       if (Array.isArray(jsonTree[key])) {
         return (
-          <div key={key} className="m-4 bg-gray-800 text-white">
+          <div key={key} className="m-4 bg-white text-black">
             <strong>{key}:</strong>
             <ul className="list-disc pl-5">
               {jsonTree[key].map((item, index) => (
@@ -194,14 +194,14 @@ const ShowDescriptionFROMJSON = (JSONFormat) => {
         );
       } else if (valueType === "object" && jsonTree[key] !== null) {
         return (
-          <div key={key} className="m-4 bg-gray-800 text-white">
+          <div key={key} className="m-4 bg-white text-black">
             <strong>{key}:</strong>
             {renderJSON(jsonTree[key])}
           </div>
         );
       } else {
         return (
-          <p key={key} className="m-4 bg-gray-800 text-white">
+          <p key={key} className="m-4 bg-white text-black">
             <strong>{key}:</strong> {jsonTree[key]}
           </p>
         );
@@ -210,7 +210,7 @@ const ShowDescriptionFROMJSON = (JSONFormat) => {
   };
 
   return (
-    <div className="p-4 bg-gray-800 text-white">
+    <div className="p-4 bg-white text-black">
       <div>{renderJSON(JSONFormat)}</div>
     </div>
   );
