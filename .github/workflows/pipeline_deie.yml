@@ -1,0 +1,33 @@
+name: Deploy React App to Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Node and dependencies
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install and build React app
+      run: |
+        npm ci
+        npm run build
+
+    - name: Deploy via SSH
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        source: "dist/*"
+        target: "/var/www/assist-client"
