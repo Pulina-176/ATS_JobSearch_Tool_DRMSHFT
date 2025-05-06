@@ -63,7 +63,7 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-200 p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 transform transition-all hover:scale-105 duration-300">
         <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-8">
-          Welcome Back
+          Welcome Back Yo!
         </h2>
         {error && (
           <p className="text-red-500 text-sm text-center mb-6 bg-red-100 p-2 rounded-lg">
