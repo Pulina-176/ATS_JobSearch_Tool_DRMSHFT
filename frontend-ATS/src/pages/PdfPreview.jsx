@@ -1,11 +1,14 @@
 import React from "react";
 import { createPdf } from "../utils/pdf-lib_function";
 import { useLocation } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
+import { useNavigate } from "react-router-dom"; 
 
 const PdfPreview = () => {
 
   const location = useLocation();
   const jobListings = location.state?.selectedJobs || [];
+  const navigate = useNavigate();
 
   let jobTitles = [];
   let countries = [];
@@ -26,8 +29,21 @@ const PdfPreview = () => {
     createPdf(jobTitles, countries, platforms, links);
   }
 
+  const handleBack = () => {
+    navigate("/display");
+  };
+
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 p-4">
+    <div className="flex flex-col items-center min-h-screen bg-gray-100 p-4">
+      <div className="flex w-full justify-start">
+            <button
+              className="flex items-center gap-2 px-4 py-2 mb-4 bg-black text-white rounded hover:bg-gray-600"
+              onClick={handleBack}
+            >
+              <FiArrowLeft />
+              Go Back
+            </button>
+      </div>
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-5xl">
         <h1 className="text-2xl font-bold mb-6 text-center">Job Listings</h1>
         
@@ -67,7 +83,7 @@ const PdfPreview = () => {
         
         <div className="mt-6 flex justify-center">
           <button 
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-md shadow transition duration-150 ease-in-out"
+            className="bg-black hover:bg-gray-500 text-white font-semibold py-2 px-6 rounded-md shadow transition duration-150 ease-in-out"
             onClick={handleCreatePDF}
           >
             Download PDF

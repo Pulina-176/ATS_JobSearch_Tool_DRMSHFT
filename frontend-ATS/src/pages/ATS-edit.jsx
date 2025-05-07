@@ -75,7 +75,7 @@ const ATS_Edit = () => {
 
             <div className='bg-white p-8 rounded-lg shadow-lg w-full max-w-5xl'>
                 <h1 className='text-2xl font-bold mb-6 text-center text-black'>ATS Keyword Report</h1>
-                <button className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded' onClick={confirmChanges}>Confirm Changes</button>
+                <button className='bg-black hover:bg-gray-500 text-white font-bold py-2 px-4 rounded' onClick={confirmChanges}>Confirm Changes</button>
 
                 {keyWordSets.map((Set, index) => (
                     <div className='overflow-x-auto' key={index}>

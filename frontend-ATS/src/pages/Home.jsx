@@ -218,13 +218,13 @@ const Home = () => {
 return loading ? (
   <Processing />
 ) : (
-  <div className="flex flex-col pb-10">
-    <Header />
-    <div className="p-5 self-center">
-      <h1 className="text-white font-bold text-left text-[36px]">
-        Welcome to the DreamShift Job Search Tool Test
+  <div className="flex flex-col pb-10 min-h-dvh">
+    {/* <Header /> */}
+    <div className="p-5 self-center ">
+      <h1 className="text-white font-bold text-left text-[36px] mt-8">
+        Welcome to the DreamShift Job Search Tool 
       </h1>
-      <h1 className="text-white font-semibold text-left text-lg">
+      <h1 className="text-white font-semibold text-left text-lg mb-6">
         Provide the required details to perform the job search
       </h1>
     </div>
@@ -236,7 +236,7 @@ return loading ? (
             className={`text-sm text-center p-2 rounded-lg font-semibold ${
               scrapeMessage.startsWith("Error")
                 ? "text-white bg-red-900"
-                : "text-white bg-blue-900"
+                : "text-white bg-yellow-500"
             }`}
           >
             {scrapeMessage}
@@ -251,7 +251,7 @@ return loading ? (
       </div>
 
     <div className="w-[100%] max-w-lg mx-auto mb-[30px]">
-      <form className="w-4/5 max-w-lg mx-auto text-left flex flex-col gap-6">
+      <form className="w-5/5 max-w-lg mx-auto text-left flex flex-col gap-6">
         <TextInput
           label="Job Roles"
           entries={var_jobRoles}
@@ -266,7 +266,7 @@ return loading ? (
           onRemove={removeLocation}
           refresh={triggerRefresh}
         />
-        <TextInput
+        {/* <TextInput
           label="Companies"
           entries={var_companies}
           onClick={() => openModal("Companies", addCompany)}
@@ -279,11 +279,11 @@ return loading ? (
           onClick={() => openModal("Fields", addField)}
           onRemove={removeField}
           refresh={triggerRefresh}
-        />
+        /> */}
       </form>
     </div>
 
-    <div className="w-4/5 max-w-lg mx-auto flex justify-center">
+    <div className="w-4/5 max-w-lg mx-auto flex mt-6">
         <button className="btn" onClick={handleSubmit}>
           Submit to Proceed
         </button>

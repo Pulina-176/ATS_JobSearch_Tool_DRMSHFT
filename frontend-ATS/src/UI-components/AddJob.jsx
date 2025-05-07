@@ -76,8 +76,8 @@ const AddJob = ({visible, closeModal, id, setNextID, currentJobs, updateJobs}) =
             {/* You can open the modal using document.getElementById('ID').showModal() method */}
             <dialog id="add_job_form" className={`modal ${visible ? 'modal-open' : 'modal-close'}`}>
                 {visible && <div className='modal-overlay fixed inset-0 bg-white opacity-60' onClick={closeModal}></div>}
-                <div className='modal-box'>
-                    <h2 className='text-lg font-bold mb-4'>Add Job</h2>
+                <div className='modal-box bg-black'>
+                    <h2 className='text-lg font-bold mb-4 text-white'>Add Job</h2>
                     <form onSubmit={handleSubmit}>
                         <div className='mb-4'>
                         <label className='block text-sm font-medium text-white'>Title</label>
@@ -147,7 +147,7 @@ const AddJob = ({visible, closeModal, id, setNextID, currentJobs, updateJobs}) =
                         </div>
                         <div className='flex justify-end'>
                         <button type='button' onClick={closeModal} className='mr-2 p-2 bg-gray-500 text-white rounded'>Cancel</button>
-                        <button type='submit' onClick={handleSubmit} className='p-2 bg-blue-500 text-white rounded'>Submit</button>
+                        <button type='submit' onClick={handleSubmit} className='p-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded'>Submit</button>
                         </div>
                     </form>
                 </div>

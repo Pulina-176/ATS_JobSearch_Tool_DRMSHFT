@@ -4,6 +4,7 @@ import { BrowserRouter as Router} from "react-router-dom";
 
 import Login from './pages/Login';
 import Home from './pages/Home';
+import Landing from './pages/Landing';
 import PdfPreview from './pages/PdfPreview';
 import Results from "./pages/Results";
 import Display from "./pages/Display";
@@ -23,6 +24,7 @@ export default function App() {
       <Route path="/" element={<Login />} />
       <Route element={<ProRoutes />}>
         <Route path="/home" element={<Home />} />
+        <Route path="/welcome" element={<Landing/>} />
         <Route path="/preview" element={<PdfPreview />} />
         <Route path="/results" element={<Results />} />
         <Route path="/display" element={<Display />} />
