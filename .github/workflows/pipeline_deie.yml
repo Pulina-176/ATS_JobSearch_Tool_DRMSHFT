@@ -21,7 +21,7 @@ jobs:
     - name: Install and build React app
       run: |
         cd frontend-ATS
-        npm ci
+        npm install
         npm run build
 
     - name: Deploy via SSH
