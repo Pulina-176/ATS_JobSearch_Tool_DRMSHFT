@@ -222,7 +222,7 @@ return loading ? (
     <Header />
     <div className="p-5 self-center">
       <h1 className="text-white font-bold text-left text-[36px]">
-        Welcome to the DreamShift Job Search Tool Test
+        Welcome to the DreamShift Job Search Tool
       </h1>
       <h1 className="text-white font-semibold text-left text-lg">
         Provide the required details to perform the job search
