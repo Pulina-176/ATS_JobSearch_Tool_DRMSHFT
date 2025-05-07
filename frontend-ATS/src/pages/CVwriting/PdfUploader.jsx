@@ -129,10 +129,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../UI-components/Header";
+import Loading from "../../UI-components/LoadingPdf";
 
 export default function PdfUploader() {
   const YOUR_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const [files, setFiles] = useState([]);
+  const [loading, setLoading] = useState(false); // State to manage loading
   const navigate = useNavigate();
 
   const handleFileChange = (event) => {
@@ -156,6 +158,7 @@ export default function PdfUploader() {
     });
 
     try {
+      setLoading(true); 
       console.log(YOUR_BACKEND_URL);
       const response = await fetch(`${YOUR_BACKEND_URL}/cv-assistant/upload`, {
         method: "POST",
@@ -186,18 +189,24 @@ export default function PdfUploader() {
           navigate("/cv-writing/resume-data", { state: { resumeData } });
         } catch (parseError) {
           console.error("Error parsing JSON:", parseError);
+          setLoading(false); 
           alert("Error processing CV data: Invalid JSON format");
         }
       } else {
         alert("Error processing CV data");
+        setLoading(false);
       }
     } catch (error) {
       console.error("Error uploading files:", error);
       alert("Error uploading files: " + error.message);
+      setLoading(false);
     }
   };
 
   return (
+    loading ? (
+      <Loading />
+    ) : (
     <div className="min-h-screen bg-[#000000] flex flex-col pb-10">
       <Header />
       <div className="p-10 self-center">
@@ -244,6 +253,6 @@ export default function PdfUploader() {
           </button>
         </div>
       </div>
-    </div>
+    </div>)
   );
 }

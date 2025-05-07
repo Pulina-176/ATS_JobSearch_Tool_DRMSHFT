@@ -43,7 +43,7 @@ const Login = () => {
       dispatch(setToken(data.token));
       dispatch(setUserId(data.user_id));
       setSuccessMessage(data.message);
-      navigate("/home");
+      navigate("/welcome");
     } catch (error) {
       setError("An error occurred. Please try again.");
       setSuccessMessage("");
@@ -53,17 +53,17 @@ const Login = () => {
   useEffect(() => {
     if (successMessage) {
       const timer = setTimeout(() => {
-        navigate("/home");
+        navigate("/welcome");
       }, 2000); // Redirect after 2 seconds
       return () => clearTimeout(timer); // Cleanup timer on unmount
     }
   }, [successMessage, navigate]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-200 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-black p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 transform transition-all hover:scale-105 duration-300">
         <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-8">
-          Welcome Back
+          DreamShift Assist
         </h2>
         {error && (
           <p className="text-red-500 text-sm text-center mb-6 bg-red-100 p-2 rounded-lg">
@@ -104,7 +104,7 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition duration-300"
+            className="w-full bg-yellow-500 text-white py-3 rounded-lg font-semibold hover:bg-yellow-400 focus:outline-none focus:ring-4 focus:ring-blue-300 transition duration-300"
           >
             Sign In
           </button>
