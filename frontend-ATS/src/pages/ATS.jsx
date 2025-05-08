@@ -1,5 +1,6 @@
 import React from 'react'
 import { useLocation , useNavigate } from 'react-router-dom'
+import { FiArrowLeft } from 'react-icons/fi'
 
 const ATS = () => {
 
@@ -9,9 +10,22 @@ const ATS = () => {
     const KeyWordSets = location.state?.ATSdata || []; // Get the data from navigation state
     console.log(KeyWordSets)
 
+    const handleBack = () => {
+        navigate("/display");
+      };
+
 
     return (
-        <div className='flex flex-col justify-center items-center min-h-screen bg-gray-500 p-4'>
+        <div className='flex flex-col justify-center items-center min-h-screen bg-gray-300 p-4'>
+            <div className="flex w-full justify-start">
+                        <button
+                          className="flex items-center gap-2 px-4 py-2 mb-4 bg-black text-white rounded hover:bg-gray-600"
+                          onClick={handleBack}
+                        >
+                          <FiArrowLeft />
+                          Go Back
+                        </button>
+                  </div>
 
             <div className='bg-white p-8 rounded-lg shadow-lg w-full max-w-5xl'>
                 <h1 className='text-2xl font-bold mb-6 text-center text-black'>ATS Keyword Report</h1>

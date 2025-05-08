@@ -1,6 +1,7 @@
 import React, { useEffect , useState } from "react";
 import { useSelector , useDispatch } from "react-redux";
 import { addJob } from "../slices/atsDataSlice";
+import Loading from "../UI-components/LoadingPdf"; // Loading animation component
 
 // Input props:
 // - description: raw job description
@@ -113,7 +114,7 @@ const JobDescription = ({ description, onClose, title, raw_title, id }) => {
 
 
   if (!description) return null;
-  if (isGenerating) return <p>Smart scraping job description... Powered by Gemini</p>;
+  if (isGenerating) return <Loading />; // Loading animation
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -122,8 +123,8 @@ const JobDescription = ({ description, onClose, title, raw_title, id }) => {
 
       {/* Modal Content */}
       <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 relative z-50 max-h-[80vh] overflow-y-auto">
-        <h3 className="text-lg font-bold mb-4">Job Description</h3>
-        <ShowDescriptionFROMJSON JSONFormat={formattedDescription}/>
+        {/* <h3 className="text-lg font-bold mb-4">Job Description</h3> */}
+        <ShowDescriptionFROMJSON Job_Description={formattedDescription}/>
         <button
           className="mt-4 bg-black text-white px-4 py-2 rounded hover:bg-gray-500"
           onClick={onClose}
@@ -139,7 +140,7 @@ export default JobDescription;
 
 
 
-const ShowDescriptionFROMJSON = (JSONFormat) => {
+const ShowDescriptionFROMJSON = (Job_Description) => {
 
   function hasChildKey (jsonTree, key) {
     if (Array.isArray(jsonTree[key])) {
@@ -211,7 +212,7 @@ const ShowDescriptionFROMJSON = (JSONFormat) => {
 
   return (
     <div className="p-4 bg-white text-black">
-      <div>{renderJSON(JSONFormat)}</div>
+      <div>{renderJSON(Job_Description)}</div>
     </div>
   );
 
