@@ -269,7 +269,7 @@ const Display = () => {
               <p className="text-sm">Location: {job.location}</p>
               <p className="text-sm">Source: {job.source}</p>
               <p className="text-sm text-gray-600 mb-2">
-                {job.other_info.length > 0 ? job.other_info.join(" ➖ ") : "No additional info"}
+                {job.other_info.length > 0 ? job.other_info.join(" - ") : "No additional info"}
               </p>
               <a
                 href={job.apply_link}
