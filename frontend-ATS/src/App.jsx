@@ -33,7 +33,7 @@ export default function App() {
         <Route path="/cv-writing/pdf-uploader" element={<PdfUploader/>} />
         <Route path="/cv-writing/resume-data" element={<ResumeData/>} />
 
-        <Route path="/test" element={<Processing />} />
+        <Route path="/status" element={<Processing />} />
       </Route>
     </Routes>
   </Router>

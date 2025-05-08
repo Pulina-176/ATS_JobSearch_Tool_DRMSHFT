@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGear } from '@fortawesome/free-solid-svg-icons'
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +8,8 @@ import { useNavigate } from 'react-router-dom';
 const Processing = () => {
 
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+  const token = useSelector((state) => state.auth.token);
 
   const [scraperStatus, setScraperStatus] = useState(null)
 
@@ -17,6 +20,7 @@ const Processing = () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
       }
     });
     if (!response.ok) {
@@ -32,8 +36,15 @@ const Processing = () => {
       if (data.status === "finished") { // when job is finished
         onJobComplete();
       }
+      else if (data.status === "stopped") { // when job is failed
+        console.log("Job Stopped")
+        navigate("/home"); // navigate to results page
+      }
+      else if (data.status === "failed") {
+        navigate("/home"); // navigate to results page
+      }
       else {
-        console.log("what?")
+        console.log("Scraping...")
         console.log(scraperStatus)
       }
     } 
@@ -62,6 +73,7 @@ const Processing = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         }
       })
     }

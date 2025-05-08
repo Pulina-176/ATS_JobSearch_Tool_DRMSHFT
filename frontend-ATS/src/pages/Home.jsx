@@ -162,11 +162,13 @@ const Home = () => {
       }
   
       const scrapeData = await scrapeResponse.json();
-      setHasScrapedData(true);
-      setScrapeMessage("You have successfully scraped data!");
-      setTimeout(() => {
-        navigate("/results", { state: { data: scrapeData.data } });
-      }, 2000);
+      console.log(scrapeData)
+      navigate("/status");
+      // setHasScrapedData(true);
+      // setScrapeMessage("You have successfully scraped data!");
+      // setTimeout(() => {
+      //   navigate("/results", { state: { data: scrapeData.data } });
+      // }, 2000);
     } catch (error) {
       console.error("Error in handleSubmit:", error);
       setScrapeMessage("Error during submission. Please try again.");
